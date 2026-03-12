@@ -1,0 +1,29 @@
+<?php
+// Create a simple placeholder image for products without images
+header('Content-Type: image/png');
+
+$width = 400;
+$height = 400;
+$image = imagecreate($width, $height);
+
+// Colors
+$bgColor = imagecolorallocate($image, 240, 240, 240);
+$textColor = imagecolorallocate($image, 100, 100, 100);
+
+// Text
+$text = 'No Image';
+$font = 5;
+
+// Calculate text position
+$textWidth = imagefontwidth($font) * strlen($text);
+$textHeight = imagefontheight($font);
+$x = ($width - $textWidth) / 2;
+$y = ($height - $textHeight) / 2;
+
+// Draw text
+imagestring($image, $font, $x, $y, $text, $textColor);
+
+// Output
+imagepng($image);
+imagedestroy($image);
+?>
