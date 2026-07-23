@@ -1,30 +1,30 @@
 <?php
-$pageTitle = 'Shopping Cart';
-require_once __DIR__ . '/includes/header.php';
+    $pageTitle = 'Shopping Cart';
+    require_once __DIR__ . '/includes/header.php';
 
-requireUserLogin();
+    requireUserLogin();
 
-$db = getDB();
-$userId = $_SESSION['user_id'];
+    $db     = getDB();
+    $userId = $_SESSION['user_id'];
 
-// Get cart items
-$stmt = $db->prepare("
+    // Get cart items
+    $stmt = $db->prepare("
     SELECT c.id as cart_id, c.quantity, p.id as product_id, p.title, p.price, p.stock, p.image
     FROM cart c
     JOIN products p ON c.product_id = p.id
     WHERE c.user_id = ? AND p.status = 'active'
     ORDER BY c.created_at DESC
 ");
-$stmt->execute([$userId]);
-$cartItems = $stmt->fetchAll();
+    $stmt->execute([$userId]);
+    $cartItems = $stmt->fetchAll();
 
-// Calculate totals
-$subtotal = 0;
-foreach ($cartItems as $item) {
+    // Calculate totals
+    $subtotal = 0;
+    foreach ($cartItems as $item) {
     $subtotal += $item['price'] * $item['quantity'];
-}
-$shipping = $subtotal > 500 ? 0 : 50;
-$total = $subtotal + $shipping;
+    }
+    $shipping = $subtotal > 500 ? 0 : 50;
+    $total    = $subtotal + $shipping;
 ?>
 
 <div class="container my-5">
@@ -51,11 +51,11 @@ $total = $subtotal + $shipping;
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="<?php echo getProductImage($item); ?>" 
-                                                 alt="<?php echo htmlspecialchars($item['title']); ?>" 
+                                            <img src="<?php echo getProductImage($item); ?>"
+                                                 alt="<?php echo htmlspecialchars($item['title']); ?>"
                                                  class="me-3" style="width: 60px; height: 60px; object-fit: cover;">
                                             <div>
-                                                <a href="<?php echo SITE_URL; ?>/product-details.php?id=<?php echo $item['product_id']; ?>" 
+                                                <a href="<?php echo SITE_URL; ?>/product-details.php?id=<?php echo $item['product_id']; ?>"
                                                    class="text-decoration-none">
                                                     <?php echo htmlspecialchars($item['title']); ?>
                                                 </a>
@@ -69,15 +69,15 @@ $total = $subtotal + $shipping;
                                         <form method="POST" action="<?php echo SITE_URL; ?>/cart-action.php" class="d-flex align-items-center">
                                             <input type="hidden" name="action" value="update">
                                             <input type="hidden" name="cart_id" value="<?php echo $item['cart_id']; ?>">
-                                            <input type="number" name="quantity" class="form-control form-control-sm" 
-                                                   style="width: 70px;" value="<?php echo $item['quantity']; ?>" 
+                                            <input type="number" name="quantity" class="form-control form-control-sm"
+                                                   style="width: 70px;" value="<?php echo $item['quantity']; ?>"
                                                    min="1" max="<?php echo $item['stock']; ?>" required>
                                             <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
                                         </form>
                                     </td>
                                     <td><?php echo formatPrice($item['price'] * $item['quantity']); ?></td>
                                     <td>
-                                        <form method="POST" action="<?php echo SITE_URL; ?>/cart-action.php" 
+                                        <form method="POST" action="<?php echo SITE_URL; ?>/cart-action.php"
                                               onsubmit="return confirm('Remove this item from cart?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="cart_id" value="<?php echo $item['cart_id']; ?>">
@@ -133,7 +133,7 @@ $total = $subtotal + $shipping;
     <?php else: ?>
     <div class="alert alert-info text-center">
         <i class="bi bi-cart-x fs-1"></i>
-        <p class="mt-3">Your cart is empty</p>
+        <p class="mt-3">Your cart is empty 🛒</p>
         <a href="<?php echo SITE_URL; ?>/products.php" class="btn btn-primary">Start Shopping</a>
     </div>
     <?php endif; ?>
