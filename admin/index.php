@@ -1,39 +1,39 @@
 <?php
-$pageTitle = 'Dashboard';
-require_once __DIR__ . '/../includes/admin_header.php';
+    $pageTitle = 'Dashboard';
+    require_once __DIR__ . '/../includes/admin_header.php';
 
-requireAdminLogin();
+    requireAdminLogin();
 
-$db = getDB();
+    $db = getDB();
 
-// Get statistics
-$stmt = $db->query("SELECT COUNT(*) as total FROM products");
-$totalProducts = $stmt->fetch()['total'];
+    // Get statistics
+    $stmt          = $db->query("SELECT COUNT(*) as total FROM products");
+    $totalProducts = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM users");
-$totalUsers = $stmt->fetch()['total'];
+    $stmt       = $db->query("SELECT COUNT(*) as total FROM users");
+    $totalUsers = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM orders");
-$totalOrders = $stmt->fetch()['total'];
+    $stmt        = $db->query("SELECT COUNT(*) as total FROM orders");
+    $totalOrders = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM categories");
-$totalCategories = $stmt->fetch()['total'];
+    $stmt            = $db->query("SELECT COUNT(*) as total FROM categories");
+    $totalCategories = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE order_status = 'completed'");
-$totalRevenue = $stmt->fetch()['total'];
+    $stmt         = $db->query("SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE order_status = 'completed'");
+    $totalRevenue = $stmt->fetch()['total'];
 
-$stmt = $db->query("SELECT COUNT(*) as total FROM orders WHERE order_status = 'pending'");
-$pendingOrders = $stmt->fetch()['total'];
+    $stmt          = $db->query("SELECT COUNT(*) as total FROM orders WHERE order_status = 'pending'");
+    $pendingOrders = $stmt->fetch()['total'];
 
-// Get recent orders
-$stmt = $db->query("
+    // Get recent orders
+    $stmt = $db->query("
     SELECT o.*, u.name as user_name
     FROM orders o
     LEFT JOIN users u ON o.user_id = u.id
     ORDER BY o.created_at DESC
     LIMIT 10
 ");
-$recentOrders = $stmt->fetchAll();
+    $recentOrders = $stmt->fetchAll();
 ?>
 
 <div class="container-fluid my-4">
@@ -127,20 +127,24 @@ $recentOrders = $stmt->fetchAll();
                             <td><?php echo formatPrice($order['total_amount']); ?></td>
                             <td>
                                 <?php
-                                $badgeClass = '';
-                                switch ($order['order_status']) {
-                                    case 'pending': $badgeClass = 'warning'; break;
-                                    case 'processing': $badgeClass = 'info'; break;
-                                    case 'completed': $badgeClass = 'success'; break;
-                                    case 'cancelled': $badgeClass = 'danger'; break;
-                                }
+                                    $badgeClass = '';
+                                    switch ($order['order_status']) {
+                                        case 'pending':$badgeClass = 'warning';
+                                            break;
+                                        case 'processing':$badgeClass = 'info';
+                                            break;
+                                        case 'completed':$badgeClass = 'success';
+                                            break;
+                                        case 'cancelled':$badgeClass = 'danger';
+                                            break;
+                                    }
                                 ?>
                                 <span class="badge bg-<?php echo $badgeClass; ?>">
                                     <?php echo ucfirst($order['order_status']); ?>
                                 </span>
                             </td>
                             <td>
-                                <a href="<?php echo ADMIN_URL; ?>/order-details.php?id=<?php echo $order['id']; ?>" 
+                                <a href="<?php echo ADMIN_URL; ?>/order-details.php?id=<?php echo $order['id']; ?>"
                                    class="btn btn-sm btn-primary">View</a>
                             </td>
                         </tr>
