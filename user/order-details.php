@@ -1,8 +1,11 @@
 <?php
-$pageTitle = 'Order Details';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 requireUserLogin();
+
+$pageTitle = 'Order Details';
+require_once __DIR__ . '/../includes/header.php';
 
 $db = getDB();
 $userId = $_SESSION['user_id'];
@@ -18,9 +21,9 @@ if (!$order) {
     exit;
 }
 
-// Get order items
-$stmt = $db->prepare("SELECT * FROM order_items WHERE order_id = ?");
-$stmt->execute([$orderId]);
+// Get order items (order ownership already verified above)
+$stmt = $db->prepare("SELECT * FROM order_items WHERE order_id = ? AND order_id IN (SELECT id FROM orders WHERE id = ? AND user_id = ?)");
+$stmt->execute([$orderId, $orderId, $userId]);
 $orderItems = $stmt->fetchAll();
 ?>
 

@@ -55,51 +55,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $db->beginTransaction();
 
-            // Generate order number
-            $orderNumber = generateOrderNumber();
-
-            // Insert order
-            $stmt = $db->prepare("
-                INSERT INTO orders (
-                    user_id, order_number, total_amount, payment_method, 
-                    shipping_name, shipping_email, shipping_mobile, shipping_address, 
-                    shipping_city, shipping_state, shipping_pincode
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $userId, $orderNumber, $total, $paymentMethod,
-                $name, $email, $mobile, $address, $city, $state, $pincode
-            ]);
-
-            $orderId = $db->lastInsertId();
-
-            // Insert order items and update stock
+            // Validate stock availability before placing order
             foreach ($cartItems as $item) {
-                // Insert order item
-                $stmt = $db->prepare("
-                    INSERT INTO order_items (order_id, product_id, product_title, product_price, quantity, subtotal)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ");
-                $itemSubtotal = $item['price'] * $item['quantity'];
-                $stmt->execute([
-                    $orderId, $item['product_id'], $item['title'], 
-                    $item['price'], $item['quantity'], $itemSubtotal
-                ]);
-
-                // Update product stock
-                $stmt = $db->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
-                $stmt->execute([$item['quantity'], $item['product_id']]);
+                $stockCheck = $db->prepare("SELECT stock FROM products WHERE id = ? AND status = 'active' FOR UPDATE");
+                $stockCheck->execute([$item['product_id']]);
+                $currentStock = $stockCheck->fetchColumn();
+                
+                if ($currentStock === false || $currentStock < $item['quantity']) {
+                    $db->rollBack();
+                    $error = 'Sorry, "' . htmlspecialchars($item['title']) . '" has insufficient stock. Available: ' . ($currentStock !== false ? $currentStock : 0);
+                    break;
+                }
             }
 
-            // Clear cart
-            $stmt = $db->prepare("DELETE FROM cart WHERE user_id = ?");
-            $stmt->execute([$userId]);
+            if (!empty($error)) {
+                // Stock validation failed, error already set
+            } else {
+                // Generate order number
+                $orderNumber = generateOrderNumber();
 
-            $db->commit();
+                // Insert order
+                $stmt = $db->prepare("
+                    INSERT INTO orders (
+                        user_id, order_number, total_amount, payment_method, 
+                        shipping_name, shipping_email, shipping_mobile, shipping_address, 
+                        shipping_city, shipping_state, shipping_pincode
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+                $stmt->execute([
+                    $userId, $orderNumber, $total, $paymentMethod,
+                    $name, $email, $mobile, $address, $city, $state, $pincode
+                ]);
 
-            setFlashMessage('success', 'Order placed successfully! Order Number: ' . $orderNumber);
-            header('Location: ' . USER_URL . '/orders.php');
-            exit;
+                $orderId = $db->lastInsertId();
+
+                // Insert order items and update stock
+                foreach ($cartItems as $item) {
+                    // Insert order item
+                    $stmt = $db->prepare("
+                        INSERT INTO order_items (order_id, product_id, product_title, product_price, quantity, subtotal)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    ");
+                    $itemSubtotal = $item['price'] * $item['quantity'];
+                    $stmt->execute([
+                        $orderId, $item['product_id'], $item['title'], 
+                        $item['price'], $item['quantity'], $itemSubtotal
+                    ]);
+
+                    // Update product stock
+                    $stmt = $db->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+                    $stmt->execute([$item['quantity'], $item['product_id']]);
+                }
+
+                // Clear cart
+                $stmt = $db->prepare("DELETE FROM cart WHERE user_id = ?");
+                $stmt->execute([$userId]);
+
+                $db->commit();
+
+                setFlashMessage('success', 'Order placed successfully! Order Number: ' . $orderNumber);
+                header('Location: ' . USER_URL . '/orders.php');
+                exit;
+            }
 
         } catch (Exception $e) {
             $db->rollBack();

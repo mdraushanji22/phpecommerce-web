@@ -1,8 +1,11 @@
 <?php
-$pageTitle = 'Add Product';
-require_once __DIR__ . '/../includes/admin_header.php';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 requireAdminLogin();
+
+$pageTitle = 'Add Product';
+require_once __DIR__ . '/../includes/admin_header.php';
 
 $db = getDB();
 $categories = $db->query("SELECT * FROM categories WHERE status = 'active' ORDER BY name")->fetchAll();
@@ -33,16 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($error)) {
-            // Get next ID
-            $lastId = $db->query("SELECT id FROM products ORDER BY id DESC LIMIT 1")->fetchColumn();
-            $nextId = $lastId ? $lastId + 1 : 1;
-
-            // Insert product with specific ID
             $stmt = $db->prepare("
-                INSERT INTO products (id, category_id, title, description, price, stock, status, image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO products (category_id, title, description, price, stock, status, image)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
-            $stmt->execute([$nextId, $categoryId, $title, $description, $price, $stock, $status, $imageName]);
+            $stmt->execute([$categoryId, $title, $description, $price, $stock, $status, $imageName]);
 
             setFlashMessage('success', 'Product added successfully');
             header('Location: ' . ADMIN_URL . '/products.php');

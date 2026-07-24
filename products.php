@@ -97,7 +97,7 @@ $categories = $db->query("SELECT * FROM categories WHERE status = 'active' ORDER
                         $catStmt = $db->prepare("SELECT name FROM categories WHERE id = ?");
                         $catStmt->execute([$categoryId]);
                         $catName = $catStmt->fetch();
-                        echo htmlspecialchars($catName['name']);
+                        echo htmlspecialchars($catName['name'] ?? 'Category');
                     } elseif (!empty($search)) {
                         echo 'Search Results for "' . htmlspecialchars($search) . '"';
                     } else {

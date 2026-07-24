@@ -123,7 +123,7 @@ function addToCartAjax(productId, quantity) {
     formData.append('product_id', productId);
     formData.append('quantity', quantity);
 
-    fetch('/phpecommerce/cart-action.php', {
+    fetch(document.querySelector('base')?.href || window.location.origin + '/phpecommerce/cart-action.php', {
         method: 'POST',
         body: formData
     })
