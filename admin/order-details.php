@@ -48,12 +48,24 @@ $items = $stmt->fetchAll();
                             <p><strong>Email:</strong> <?php echo htmlspecialchars($order['user_email']); ?></p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($order['payment_method']); ?></p>
+                            <p><strong>Payment Method:</strong> 
+                                <?php if ($order['payment_method'] === 'Razorpay'): ?>
+                                    <span class="badge bg-info"><i class="bi bi-credit-card"></i> Razorpay (Online)</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary"><i class="bi bi-cash"></i> COD</span>
+                                <?php endif; ?>
+                            </p>
                             <p><strong>Payment Status:</strong> 
                                 <span class="badge bg-<?php echo $order['payment_status'] === 'paid' ? 'success' : 'warning'; ?>">
                                     <?php echo ucfirst($order['payment_status']); ?>
                                 </span>
                             </p>
+                            <?php if (!empty($order['razorpay_order_id'])): ?>
+                            <p><strong>Razorpay Order ID:</strong> <code><?php echo htmlspecialchars($order['razorpay_order_id']); ?></code></p>
+                            <?php endif; ?>
+                            <?php if (!empty($order['razorpay_payment_id'])): ?>
+                            <p><strong>Razorpay Payment ID:</strong> <code><?php echo htmlspecialchars($order['razorpay_payment_id']); ?></code></p>
+                            <?php endif; ?>
                             <p><strong>Order Status:</strong> 
                                 <span class="badge bg-<?php
                                     $badges = ['pending' => 'warning', 'processing' => 'info', 'completed' => 'success', 'cancelled' => 'danger'];

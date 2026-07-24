@@ -11,6 +11,12 @@ define('SITE_URL', 'http://localhost/phpecommerce');
 define('ADMIN_URL', SITE_URL . '/admin');
 define('USER_URL', SITE_URL . '/user');
 
+// Razorpay Configuration
+// Get these from: https://dashboard.razorpay.com/app/keys
+// Use test keys for development, live keys for production
+define('RAZORPAY_KEY_ID', 'rzp_test_THNWWeRU0Vegoo');      // Replace with your Razorpay Key ID
+define('RAZORPAY_KEY_SECRET', 'QrkKpV1OnND86SlzrPOcQaae'); // Replace with your Razorpay Key Secret
+
 // Upload Directories
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('PRODUCT_UPLOAD_DIR', UPLOAD_DIR . 'products/');
@@ -35,4 +41,3 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Timezone
 date_default_timezone_set('Asia/Kolkata');
-?>

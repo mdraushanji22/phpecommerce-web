@@ -40,7 +40,16 @@ $orderItems = $stmt->fetchAll();
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <p><strong>Order Date:</strong> <?php echo date('M d, Y h:i A', strtotime($order['created_at'])); ?></p>
-                            <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($order['payment_method']); ?></p>
+                            <p><strong>Payment Method:</strong> 
+                                <?php if ($order['payment_method'] === 'Razorpay'): ?>
+                                    <span class="badge bg-info"><i class="bi bi-credit-card"></i> Razorpay (Online)</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary"><i class="bi bi-cash"></i> Cash on Delivery</span>
+                                <?php endif; ?>
+                            </p>
+                            <?php if (!empty($order['razorpay_payment_id'])): ?>
+                            <p><strong>Payment ID:</strong> <code><?php echo htmlspecialchars($order['razorpay_payment_id']); ?></code></p>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-6">
                             <p><strong>Order Status:</strong> 
