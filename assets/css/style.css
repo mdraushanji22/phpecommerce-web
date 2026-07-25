@@ -177,3 +177,31 @@ img {
     padding: 0.35em 0.65em;
     font-weight: 600;
 }
+
+/* Location Permission Modal */
+#locationPermissionModal .modal-content {
+    border: none;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+#locationPermissionModal .modal-header {
+    border-bottom: none;
+}
+
+#locationPermissionModal .modal-footer {
+    border-top: none;
+}
+
+/* Use Current Location Button */
+#useCurrentLocationBtn {
+    border-style: dashed;
+    border-width: 2px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+#useCurrentLocationBtn:hover {
+    border-style: solid;
+    background-color: rgba(13, 110, 253, 0.05);
+}

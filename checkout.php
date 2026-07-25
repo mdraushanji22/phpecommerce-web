@@ -136,6 +136,13 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="alert alert-danger"><?php echo $error; ?></div>
                     <?php endif; ?>
 
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-primary w-100" id="useCurrentLocationBtn" onclick="useCurrentLocation()">
+                            <i class="bi bi-geo-alt"></i> Use My Current Location
+                        </button>
+                        <div id="locationFillStatus" class="mt-2" style="display:none;"></div>
+                    </div>
+
                     <form id="checkoutForm" method="POST" action="">
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -251,6 +258,98 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <script>
+/**
+ * Current Location Feature
+ * Auto-fills shipping fields from saved location or live geolocation
+ */
+(function() {
+    var saved = localStorage.getItem('userLocation');
+    if (saved) {
+        try {
+            var loc = JSON.parse(saved);
+            if (loc.address && !document.getElementById('address').value.trim()) {
+                document.getElementById('address').value = loc.address;
+            }
+            if (loc.city && !document.getElementById('city').value.trim()) {
+                document.getElementById('city').value = loc.city;
+            }
+            if (loc.state && !document.getElementById('state').value.trim()) {
+                document.getElementById('state').value = loc.state;
+            }
+            if (loc.pincode && !document.getElementById('pincode').value.trim()) {
+                document.getElementById('pincode').value = loc.pincode;
+            }
+        } catch(e) {}
+    }
+})();
+
+function useCurrentLocation() {
+    var btn = document.getElementById('useCurrentLocationBtn');
+    var statusEl = document.getElementById('locationFillStatus');
+
+    if (!navigator.geolocation) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = '<span class="text-danger small">Geolocation is not supported by your browser.</span>';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Fetching location...';
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '<span class="text-muted small">Please allow location access when prompted.</span>';
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        statusEl.innerHTML = '<span class="text-muted small">Fetching address details...</span>';
+
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&zoom=18&addressdetails=1', {
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(function(resp) { return resp.json(); })
+        .then(function(data) {
+            var addr = data.address || {};
+            var address = [addr.house_number, addr.road, addr.neighbourhood, addr.suburb].filter(Boolean).join(', ') || data.display_name || '';
+            var city = addr.city || addr.town || addr.village || addr.county || '';
+            var state = addr.state || '';
+            var pincode = addr.postcode || '';
+
+            if (address) document.getElementById('address').value = address;
+            if (city) document.getElementById('city').value = city;
+            if (state) document.getElementById('state').value = state;
+            if (pincode) document.getElementById('pincode').value = pincode;
+
+            localStorage.setItem('userLocation', JSON.stringify({
+                lat: lat, lon: lon, address: address, city: city, state: state, pincode: pincode
+            }));
+
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Location Filled!';
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-success');
+            statusEl.innerHTML = '<span class="text-success small"><i class="bi bi-check-circle"></i> Shipping address auto-filled from your current location.</span>';
+
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-geo-alt"></i> Use My Current Location';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-primary');
+                statusEl.style.display = 'none';
+            }, 3000);
+        })
+        .catch(function() {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-geo-alt"></i> Use My Current Location';
+            statusEl.innerHTML = '<span class="text-danger small">Could not fetch address. Please enter manually.</span>';
+        });
+    }, function(error) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-geo-alt"></i> Use My Current Location';
+        var msg = 'Location access was denied. Please enter your address manually.';
+        if (error.code === error.TIMEOUT) msg = 'Location request timed out. Please try again.';
+        statusEl.innerHTML = '<span class="text-danger small">' + msg + '</span>';
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 });
+}
+
 /**
  * Razorpay Payment Integration Script
  * 

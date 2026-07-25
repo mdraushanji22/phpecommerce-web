@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $db->prepare("INSERT INTO users (name, email, mobile, password) VALUES (?, ?, ?, ?)");
             
             if ($stmt->execute([$name, $email, $mobile, $hashedPassword])) {
+                $_SESSION['show_location_prompt'] = true;
                 setFlashMessage('success', 'Registration successful! Please login.');
                 header('Location: ' . SITE_URL . '/login.php');
                 exit;

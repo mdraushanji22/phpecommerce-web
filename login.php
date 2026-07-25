@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
             
+            $_SESSION['show_location_prompt'] = true;
             setFlashMessage('success', 'Login successful! Welcome back, ' . $user['name']);
             header('Location: ' . SITE_URL . '/');
             exit;
@@ -57,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="text-end mb-3">
+                            <a href="<?php echo SITE_URL; ?>/forgot-password.php" class="text-decoration-none small">Forgot Password?</a>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Login</button>
                     </form>
