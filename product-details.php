@@ -82,8 +82,11 @@ $relatedProducts = $stmt->fetchAll();
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label for="quantity" class="form-label">Quantity:</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" 
-                               placeholder="Qty" value="1" min="1" max="<?php echo $product['stock']; ?>" required>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                            <input type="number" class="form-control" id="quantity" name="quantity" 
+                                   placeholder="Qty" value="1" min="1" max="<?php echo $product['stock']; ?>" required>
+                        </div>
                     </div>
                 </div>
 

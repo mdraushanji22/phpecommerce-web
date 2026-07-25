@@ -59,14 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form method="POST" action="">
                         <div class="mb-3">
                             <label for="password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required
-                                   placeholder="Enter new password (min 6 characters)">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                       placeholder="Enter new password (min 6 characters)">
+                            </div>
                             <small class="form-text text-muted">Minimum 6 characters</small>
                         </div>
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required
-                                   placeholder="Re-enter new password">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required
+                                       placeholder="Re-enter new password">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-shield-lock"></i> Reset Password

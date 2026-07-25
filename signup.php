@@ -68,32 +68,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form method="POST" action="">
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required
-                                   placeholder="Enter your full name"
-                                   value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       placeholder="Enter your full name"
+                                       value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required
-                                   placeholder="Enter your email address"
-                                   value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                       placeholder="Enter your email address"
+                                       value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="mobile" class="form-label">Mobile Number</label>
-                            <input type="text" class="form-control" id="mobile" name="mobile" required
-                                   placeholder="Enter your mobile number"
-                                   value="<?php echo isset($_POST['mobile']) ? htmlspecialchars($_POST['mobile']) : ''; ?>">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                                <input type="text" class="form-control" id="mobile" name="mobile" required
+                                       placeholder="Enter your mobile number"
+                                       value="<?php echo isset($_POST['mobile']) ? htmlspecialchars($_POST['mobile']) : ''; ?>">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required
-                                   placeholder="Create a password (min 6 characters)">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                       placeholder="Create a password (min 6 characters)">
+                            </div>
                             <small class="form-text text-muted">Minimum 6 characters</small>
                         </div>
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required
-                                   placeholder="Re-enter your password">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required
+                                       placeholder="Re-enter your password">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                     </form>

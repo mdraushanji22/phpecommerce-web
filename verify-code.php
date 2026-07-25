@@ -55,11 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form method="POST" action="">
                         <div class="mb-3">
                             <label for="code" class="form-label">Verification Code</label>
-                            <input type="text" class="form-control text-center fw-bold" id="code" name="code"
-                                   maxlength="6" pattern="[0-9]{6}" required
-                                   placeholder="Enter 6-digit code"
-                                   style="font-size: 1.5rem; letter-spacing: 0.5rem;"
-                                   value="<?php echo isset($_POST['code']) ? htmlspecialchars($_POST['code']) : ''; ?>">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                <input type="text" class="form-control text-center fw-bold" id="code" name="code"
+                                       maxlength="6" pattern="[0-9]{6}" required
+                                       placeholder="Enter 6-digit code"
+                                       style="font-size: 1.5rem; letter-spacing: 0.5rem;"
+                                       value="<?php echo isset($_POST['code']) ? htmlspecialchars($_POST['code']) : ''; ?>">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-check-circle"></i> Verify Code

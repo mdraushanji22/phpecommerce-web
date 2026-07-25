@@ -63,14 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <form method="POST" action="">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" required
-                                       placeholder="Enter admin email"
-                                       value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email" required
+                                           placeholder="Enter admin email"
+                                           value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required
-                                       placeholder="Enter admin password">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" required
+                                           placeholder="Enter admin password">
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>

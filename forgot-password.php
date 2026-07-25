@@ -95,9 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form method="POST" action="">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required
-                                   placeholder="Enter your registered email"
-                                   value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                       placeholder="Enter your registered email"
+                                       value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-send"></i> Send Verification Code
