@@ -148,11 +148,13 @@ require_once __DIR__ . '/includes/header.php';
                             <div class="col-md-6 mb-3">
                                 <label for="name" class="form-label">Full Name *</label>
                                 <input type="text" class="form-control" id="name" name="name" required
+                                       placeholder="Enter full name"
                                        value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : htmlspecialchars($user['name']); ?>">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">Email *</label>
                                 <input type="email" class="form-control" id="email" name="email" required
+                                       placeholder="Enter email address"
                                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : htmlspecialchars($user['email']); ?>">
                             </div>
                         </div>
@@ -160,23 +162,27 @@ require_once __DIR__ . '/includes/header.php';
                         <div class="mb-3">
                             <label for="mobile" class="form-label">Mobile Number *</label>
                             <input type="text" class="form-control" id="mobile" name="mobile" required
+                                   placeholder="Enter mobile number"
                                    value="<?php echo isset($_POST['mobile']) ? htmlspecialchars($_POST['mobile']) : htmlspecialchars($user['mobile']); ?>">
                         </div>
 
                         <div class="mb-3">
                             <label for="address" class="form-label">Address *</label>
-                            <textarea class="form-control" id="address" name="address" rows="3" required><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : htmlspecialchars($user['address'] ?? ''); ?></textarea>
+                            <textarea class="form-control" id="address" name="address" rows="3" required
+                                      placeholder="Enter full delivery address"><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : htmlspecialchars($user['address'] ?? ''); ?></textarea>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="city" class="form-label">City *</label>
                                 <input type="text" class="form-control" id="city" name="city" required
+                                       placeholder="Enter city"
                                        value="<?php echo isset($_POST['city']) ? htmlspecialchars($_POST['city']) : htmlspecialchars($user['city'] ?? ''); ?>">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="state" class="form-label">State *</label>
                                 <input type="text" class="form-control" id="state" name="state" required
+                                       placeholder="Enter state"
                                        value="<?php echo isset($_POST['state']) ? htmlspecialchars($_POST['state']) : htmlspecialchars($user['state'] ?? ''); ?>">
                             </div>
                         </div>
@@ -184,6 +190,7 @@ require_once __DIR__ . '/includes/header.php';
                         <div class="mb-3">
                             <label for="pincode" class="form-label">Pincode *</label>
                             <input type="text" class="form-control" id="pincode" name="pincode" required
+                                   placeholder="Enter pincode"
                                    value="<?php echo isset($_POST['pincode']) ? htmlspecialchars($_POST['pincode']) : htmlspecialchars($user['pincode'] ?? ''); ?>">
                         </div>
 

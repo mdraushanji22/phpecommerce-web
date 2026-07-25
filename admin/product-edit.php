@@ -82,7 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Product Title *</label>
-                        <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($product['title']); ?>" required>
+                        <input type="text" class="form-control" name="title" required
+                               placeholder="Enter product title"
+                               value="<?php echo htmlspecialchars($product['title']); ?>">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Category *</label>
@@ -98,17 +100,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="mb-3">
                     <label class="form-label">Description</label>
-                    <textarea class="form-control" name="description" rows="4"><?php echo htmlspecialchars($product['description']); ?></textarea>
+                    <textarea class="form-control" name="description" rows="4"
+                              placeholder="Enter product description"><?php echo htmlspecialchars($product['description']); ?></textarea>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Price *</label>
-                        <input type="number" step="0.01" class="form-control" name="price" value="<?php echo $product['price']; ?>" required>
+                        <input type="number" step="0.01" class="form-control" name="price" required
+                               placeholder="e.g. 999.00"
+                               value="<?php echo $product['price']; ?>">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Stock *</label>
-                        <input type="number" class="form-control" name="stock" value="<?php echo $product['stock']; ?>" required>
+                        <input type="number" class="form-control" name="stock" required
+                               placeholder="e.g. 50"
+                               value="<?php echo $product['stock']; ?>">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Status</label>

@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name *</label>
                             <input type="text" class="form-control" id="name" name="name" required
+                                   placeholder="Enter your full name"
                                    value="<?php echo htmlspecialchars($user['name']); ?>">
                         </div>
 
@@ -79,23 +80,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label for="mobile" class="form-label">Mobile Number *</label>
                             <input type="text" class="form-control" id="mobile" name="mobile" required
+                                   placeholder="Enter your mobile number"
                                    value="<?php echo htmlspecialchars($user['mobile']); ?>">
                         </div>
 
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="3"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
+                            <textarea class="form-control" id="address" name="address" rows="3"
+                                      placeholder="Enter your full address"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="city" class="form-label">City</label>
                                 <input type="text" class="form-control" id="city" name="city"
+                                       placeholder="Enter city"
                                        value="<?php echo htmlspecialchars($user['city'] ?? ''); ?>">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="state" class="form-label">State</label>
                                 <input type="text" class="form-control" id="state" name="state"
+                                       placeholder="Enter state"
                                        value="<?php echo htmlspecialchars($user['state'] ?? ''); ?>">
                             </div>
                         </div>
@@ -103,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label for="pincode" class="form-label">Pincode</label>
                             <input type="text" class="form-control" id="pincode" name="pincode"
+                                   placeholder="Enter pincode"
                                    value="<?php echo htmlspecialchars($user['pincode'] ?? ''); ?>">
                         </div>
 

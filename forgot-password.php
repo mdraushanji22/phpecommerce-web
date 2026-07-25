@@ -8,7 +8,8 @@ if (isUserLoggedIn()) {
 }
 
 $error = '';
-$success = '';
+$showCode = '';
+$mailFailed = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = sanitize($_POST['email'] ?? '');
@@ -33,24 +34,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $db->prepare("INSERT INTO password_resets (email, code, expires_at) VALUES (?, ?, ?)");
             $stmt->execute([$email, $code, $expiresAt]);
 
-            $subject = SITE_NAME . ' - Password Reset Code';
-            $message = "Hello " . htmlspecialchars($user['name']) . ",\n\n";
-            $message .= "Your password reset verification code is:\n\n";
-            $message .= $code . "\n\n";
-            $message .= "This code is valid for 10 minutes.\n\n";
-            $message .= "If you did not request a password reset, please ignore this email.\n\n";
-            $message .= "Thanks,\n" . SITE_NAME . " Team";
+            $subject = SITE_NAME . " - Password Reset Code";
+            $body = "Hello " . htmlspecialchars($user['name']) . ",\n\n";
+            $body .= "Your password reset verification code is:\n\n";
+            $body .= $code . "\n\n";
+            $body .= "This code is valid for 10 minutes.\n\n";
+            $body .= "If you did not request a password reset, please ignore this email.\n\n";
+            $body .= "Thanks,\n" . SITE_NAME . " Team";
 
             $headers = "From: " . SITE_NAME . " <noreply@" . $_SERVER['HTTP_HOST'] . ">\r\n";
             $headers .= "Reply-To: noreply@" . $_SERVER['HTTP_HOST'] . "\r\n";
             $headers .= "X-Mailer: PHP/" . phpversion();
 
-            $mailSent = @mail($email, $subject, $message, $headers);
+            $mailSent = @mail($email, $subject, $body, $headers);
 
             $_SESSION['reset_email'] = $email;
-            setFlashMessage('success', 'Verification code sent to your email address.');
-            header('Location: ' . SITE_URL . '/verify-code.php');
-            exit;
+
+            if ($mailSent) {
+                setFlashMessage('success', 'Verification code sent to your email address.');
+                header('Location: ' . SITE_URL . '/verify-code.php');
+                exit;
+            } else {
+                $mailFailed = true;
+                $showCode = $code;
+            }
         } else {
             $error = 'No account found with that email address';
         }
@@ -70,6 +77,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="alert alert-danger"><?php echo $error; ?></div>
                     <?php endif; ?>
 
+                    <?php if ($mailFailed && $showCode): ?>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> <strong>Email could not be sent.</strong> Please use the verification code below:
+                    </div>
+                    <div class="text-center mb-3">
+                        <span class="badge bg-primary" style="font-size: 1.8rem; letter-spacing: 8px; padding: 15px 25px;"><?php echo $showCode; ?></span>
+                    </div>
+                    <div class="text-center mb-3">
+                        <a href="<?php echo SITE_URL; ?>/verify-code.php" class="btn btn-primary">
+                            <i class="bi bi-arrow-right"></i> Enter Verification Code
+                        </a>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (!$mailFailed): ?>
                     <form method="POST" action="">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
@@ -81,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="bi bi-send"></i> Send Verification Code
                         </button>
                     </form>
+                    <?php endif; ?>
 
                     <div class="text-center mt-3">
                         <p>Remember your password? <a href="<?php echo SITE_URL; ?>/login.php">Login</a></p>

@@ -69,26 +69,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="name" name="name" required
+                                   placeholder="Enter your full name"
                                    value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control" id="email" name="email" required
+                                   placeholder="Enter your email address"
                                    value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         </div>
                         <div class="mb-3">
                             <label for="mobile" class="form-label">Mobile Number</label>
                             <input type="text" class="form-control" id="mobile" name="mobile" required
+                                   placeholder="Enter your mobile number"
                                    value="<?php echo isset($_POST['mobile']) ? htmlspecialchars($_POST['mobile']) : ''; ?>">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                   placeholder="Create a password (min 6 characters)">
                             <small class="form-text text-muted">Minimum 6 characters</small>
                         </div>
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required
+                                   placeholder="Re-enter your password">
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                     </form>

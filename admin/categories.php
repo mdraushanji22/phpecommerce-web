@@ -117,11 +117,13 @@ $categories = $db->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Category Name *</label>
-                        <input type="text" class="form-control" name="name" required>
+                        <input type="text" class="form-control" name="name" required
+                               placeholder="Enter category name">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" rows="3"></textarea>
+                        <textarea class="form-control" name="description" rows="3"
+                                  placeholder="Enter category description"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>
@@ -154,11 +156,13 @@ $categories = $db->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Category Name *</label>
-                        <input type="text" class="form-control" name="name" id="edit_name" required>
+                        <input type="text" class="form-control" name="name" id="edit_name" required
+                               placeholder="Enter category name">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" id="edit_description" rows="3"></textarea>
+                        <textarea class="form-control" name="description" id="edit_description" rows="3"
+                                  placeholder="Enter category description"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>

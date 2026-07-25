@@ -53,11 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control" id="email" name="email" required 
+                                   placeholder="Enter your email address"
                                    value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                   placeholder="Enter your password">
                         </div>
                         <div class="text-end mb-3">
                             <a href="<?php echo SITE_URL; ?>/forgot-password.php" class="text-decoration-none small">Forgot Password?</a>
