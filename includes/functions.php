@@ -244,6 +244,37 @@ function getRefundStatusBadge($status) {
     return $badges[$status] ?? 'secondary';
 }
 
+// ==================== ESTIMATED DELIVERY FUNCTIONS ====================
+
+// Delivery time constant (in days)
+define('DELIVERY_DAYS', 4);
+
+// Get estimated delivery date from a given date
+function getEstimatedDeliveryDate($fromDate = null) {
+    $date = $fromDate ? new DateTime($fromDate) : new DateTime();
+    $date->modify('+' . DELIVERY_DAYS . ' days');
+    return $date;
+}
+
+// Check if an order has been delivered
+function isOrderDelivered($order) {
+    return $order['order_status'] === 'completed';
+}
+
+// Get estimated delivery date string for display (e.g. "31 July 2026")
+function getEstimatedDeliveryDisplay($fromDate = null) {
+    $deliveryDate = getEstimatedDeliveryDate($fromDate);
+    return $deliveryDate->format('d M Y');
+}
+
+// Get days remaining until estimated delivery
+function getDaysUntilDelivery($fromDate = null) {
+    $deliveryDate = getEstimatedDeliveryDate($fromDate);
+    $now = new DateTime();
+    $diff = $now->diff($deliveryDate);
+    return max(0, (int)$diff->format('%r%a'));
+}
+
 // Get return images for a return request
 function getReturnImages($returnId) {
     $db = getDB();

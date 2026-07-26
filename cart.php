@@ -126,6 +126,11 @@ require_once __DIR__ . '/includes/header.php';
                         <strong>Total:</strong>
                         <strong class="text-primary"><?php echo formatPrice($total); ?></strong>
                     </div>
+                    <!-- Estimated Delivery -->
+                    <div class="delivery-badge w-100 justify-content-center mb-3">
+                        <span class="delivery-icon"><i class="bi bi-truck"></i></span>
+                        <span>Estimated Delivery: <strong><?php echo getEstimatedDeliveryDisplay(); ?></strong></span>
+                    </div>
                     <a href="<?php echo SITE_URL; ?>/checkout.php" class="btn btn-success w-100">
                         <i class="bi bi-credit-card"></i> Proceed to Checkout
                     </a>

@@ -1,61 +1,61 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../includes/functions.php';
+    require_once __DIR__ . '/../config/config.php';
+    require_once __DIR__ . '/../includes/functions.php';
 
-requireAdminLogin();
+    requireAdminLogin();
 
-$pageTitle = 'Manage Orders';
-require_once __DIR__ . '/../includes/admin_header.php';
+    $pageTitle = 'Manage Orders';
+    require_once __DIR__ . '/../includes/admin_header.php';
 
-$db = getDB();
+    $db = getDB();
 
-// Handle status update
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
-    $orderId = (int)$_POST['order_id'];
-    $status = sanitize($_POST['order_status']);
-    
+    // Handle status update
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    $orderId = (int) $_POST['order_id'];
+    $status  = sanitize($_POST['order_status']);
+
     $stmt = $db->prepare("UPDATE orders SET order_status = ? WHERE id = ?");
     $stmt->execute([$status, $orderId]);
     setFlashMessage('success', 'Order status updated');
     header('Location: ' . ADMIN_URL . '/orders.php');
     exit;
-}
+    }
 
-// Search & filter
-$search = isset($_GET['search']) ? sanitize($_GET['search']) : '';
-$filterStatus = isset($_GET['status']) ? sanitize($_GET['status']) : '';
+    // Search & filter
+    $search       = isset($_GET['search']) ? sanitize($_GET['search']) : '';
+    $filterStatus = isset($_GET['status']) ? sanitize($_GET['status']) : '';
 
-$where = [];
-$params = [];
+    $where  = [];
+    $params = [];
 
-if (!empty($filterStatus)) {
-    $where[] = "o.order_status = ?";
+    if (! empty($filterStatus)) {
+    $where[]  = "o.order_status = ?";
     $params[] = $filterStatus;
-}
+    }
 
-if (!empty($search)) {
-    $where[] = "(o.order_number LIKE ? OR u.name LIKE ? OR u.email LIKE ? OR o.id LIKE ?)";
+    if (! empty($search)) {
+    $where[]    = "(o.order_number LIKE ? OR u.name LIKE ? OR u.email LIKE ? OR o.id LIKE ?)";
     $searchTerm = "%{$search}%";
-    $params[] = $searchTerm;
-    $params[] = $searchTerm;
-    $params[] = $searchTerm;
-    $params[] = $searchTerm;
-}
+    $params[]   = $searchTerm;
+    $params[]   = $searchTerm;
+    $params[]   = $searchTerm;
+    $params[]   = $searchTerm;
+    }
 
-$whereClause = count($where) > 0 ? 'WHERE ' . implode(' AND ', $where) : '';
+    $whereClause = count($where) > 0 ? 'WHERE ' . implode(' AND ', $where) : '';
 
-$stmt = $db->prepare("
+    $stmt = $db->prepare("
     SELECT o.*, u.name as user_name, u.email as user_email
     FROM orders o
     LEFT JOIN users u ON o.user_id = u.id
     {$whereClause}
     ORDER BY o.created_at DESC
 ");
-$stmt->execute($params);
-$orders = $stmt->fetchAll();
+    $stmt->execute($params);
+    $orders = $stmt->fetchAll();
 
-// Status counts for filter cards
-$stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY order_status")->fetchAll(PDO::FETCH_KEY_PAIR);
+    // Status counts for filter cards
+    $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY order_status")->fetchAll(PDO::FETCH_KEY_PAIR);
 ?>
 
 <div class="container-fluid my-4">
@@ -68,7 +68,7 @@ $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY o
                 <div class="card text-center border-primary <?php echo empty($filterStatus) ? 'border-3' : ''; ?>">
                     <div class="card-body py-3">
                         <h4 class="text-primary mb-0"><?php echo array_sum($stats); ?></h4>
-                        <small class="text-muted">All</small>
+                        <small class="text-muted">Total</small>
                     </div>
                 </div>
             </a>
@@ -119,13 +119,13 @@ $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY o
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="" class="row g-2">
-                <?php if (!empty($filterStatus)): ?>
+                <?php if (! empty($filterStatus)): ?>
                 <input type="hidden" name="status" value="<?php echo htmlspecialchars($filterStatus); ?>">
                 <?php endif; ?>
                 <div class="col-md-10">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" name="search" 
+                        <input type="text" class="form-control" name="search"
                                placeholder="Search by order number, customer name or email..."
                                value="<?php echo htmlspecialchars($search); ?>">
                     </div>
@@ -134,7 +134,7 @@ $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY o
                     <button type="submit" class="btn btn-primary w-100">Search</button>
                 </div>
             </form>
-            <?php if (!empty($search) || !empty($filterStatus)): ?>
+            <?php if (! empty($search) || ! empty($filterStatus)): ?>
             <a href="<?php echo ADMIN_URL; ?>/orders.php" class="btn btn-outline-secondary btn-sm mt-2">
                 <i class="bi bi-x-circle"></i> Clear Filters
             </a>
@@ -171,7 +171,7 @@ $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY o
                             <td>
                                 <form method="POST" style="display:inline;">
                                     <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
-                                    <select name="order_status" class="form-select form-select-sm" style="width: auto; display: inline-block;" 
+                                    <select name="order_status" class="form-select form-select-sm" style="width: auto; display: inline-block;"
                                             onchange="this.form.submit();">
                                         <option value="pending" <?php echo $order['order_status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
                                         <option value="processing" <?php echo $order['order_status'] === 'processing' ? 'selected' : ''; ?>>Processing</option>
@@ -182,7 +182,7 @@ $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY o
                                 </form>
                             </td>
                             <td>
-                                <a href="<?php echo ADMIN_URL; ?>/order-details.php?id=<?php echo $order['id']; ?>" 
+                                <a href="<?php echo ADMIN_URL; ?>/order-details.php?id=<?php echo $order['id']; ?>"
                                    class="btn btn-sm btn-primary">View</a>
                             </td>
                         </tr>

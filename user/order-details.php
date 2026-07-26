@@ -74,6 +74,29 @@ $orderItems = $stmt->fetchAll();
                         </div>
                     </div>
 
+                    <!-- Estimated Delivery -->
+                    <?php if (isOrderDelivered($order)): ?>
+                    <div class="delivery-card delivered mb-3">
+                        <div class="delivery-icon"><i class="bi bi-check-circle-fill"></i></div>
+                        <div class="delivery-text">
+                            <div class="small text-muted">Delivery Status</div>
+                            <strong>Delivered</strong>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <?php
+                    $estDate = getEstimatedDeliveryDisplay($order['created_at']);
+                    $daysLeft = getDaysUntilDelivery($order['created_at']);
+                    ?>
+                    <div class="delivery-card mb-3">
+                        <div class="delivery-icon"><i class="bi bi-truck"></i></div>
+                        <div class="delivery-text">
+                            <div class="small text-muted">Estimated Delivery</div>
+                            <strong><?php echo $estDate; ?> (<?php echo $daysLeft > 0 ? 'Within ' . $daysLeft . ' Day' . ($daysLeft !== 1 ? 's' : '') : 'Delivery Expected Today'; ?>)</strong>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
                     <h6>Order Items:</h6>
                     <div class="table-responsive">
                         <table class="table">

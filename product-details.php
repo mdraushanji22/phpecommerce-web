@@ -44,7 +44,7 @@ $relatedProducts = $stmt->fetchAll();
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/">Home</a></li>
             <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/products.php">Products</a></li>
-            <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/products.php?category=<?php echo $product['category_id']; ?>"><?php echo htmlspecialchars($product['category_name']); ?></a></li>
+            <li class="breadcrumb-item"><?php echo htmlspecialchars($product['category_name']); ?></li>
             <li class="breadcrumb-item active"><?php echo htmlspecialchars($product['title']); ?></li>
         </ol>
     </nav>
@@ -70,6 +70,15 @@ $relatedProducts = $stmt->fetchAll();
                 <?php else: ?>
                 <span class="badge bg-danger">Out of Stock</span>
                 <?php endif; ?>
+            </div>
+
+            <!-- Estimated Delivery -->
+            <div class="delivery-card mb-4">
+                <div class="delivery-icon"><i class="bi bi-truck"></i></div>
+                <div class="delivery-text">
+                    <div class="small text-muted">Estimated Delivery</div>
+                    <strong><?php echo getEstimatedDeliveryDisplay(); ?> (Within <?php echo DELIVERY_DAYS; ?> Days)</strong>
+                </div>
             </div>
 
             <p class="mb-4"><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>

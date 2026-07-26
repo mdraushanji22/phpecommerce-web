@@ -33,6 +33,7 @@ $orders = $stmt->fetchAll();
                     <th>Total Amount</th>
                     <th>Payment Method</th>
                     <th>Order Status</th>
+                    <th>Est. Delivery</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -56,6 +57,13 @@ $orders = $stmt->fetchAll();
                         <span class="badge bg-<?php echo $badgeClass; ?>">
                             <?php echo ucfirst($order['order_status']); ?>
                         </span>
+                    </td>
+                    <td>
+                        <?php if (isOrderDelivered($order)): ?>
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Delivered</span>
+                        <?php else: ?>
+                            <small><i class="bi bi-truck text-success"></i> <?php echo getEstimatedDeliveryDisplay($order['created_at']); ?></small>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <a href="<?php echo USER_URL; ?>/order-details.php?id=<?php echo $order['id']; ?>" 

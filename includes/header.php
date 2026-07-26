@@ -21,8 +21,8 @@ $flash = getFlashMessage();
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Sticky Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand fw-bold" href="<?php echo SITE_URL; ?>/">
                 <i class="bi bi-shop"></i> <?php echo SITE_NAME; ?>

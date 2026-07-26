@@ -36,6 +36,21 @@
     <!-- Custom JS -->
     <script src="<?php echo SITE_URL; ?>/assets/js/main.js"></script>
 
+    <!-- Sticky Header Shadow Effect -->
+    <script>
+    (function() {
+        var navbar = document.getElementById('mainNavbar');
+        if (!navbar) return;
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-sm');
+            } else {
+                navbar.classList.remove('shadow-sm');
+            }
+        });
+    })();
+    </script>
+
 <?php if (!empty($_SESSION['show_location_prompt'])): ?>
 <?php unset($_SESSION['show_location_prompt']); ?>
     <!-- Location Permission Modal -->

@@ -279,6 +279,11 @@ require_once __DIR__ . '/includes/header.php';
                         <strong>Total Amount:</strong>
                         <strong class="text-success"><?php echo formatPrice($total); ?></strong>
                     </div>
+                    <!-- Estimated Delivery -->
+                    <div class="delivery-badge w-100 justify-content-center mt-3">
+                        <span class="delivery-icon"><i class="bi bi-truck"></i></span>
+                        <span>Expected Delivery: <strong><?php echo getEstimatedDeliveryDisplay(); ?></strong> (Within <?php echo DELIVERY_DAYS; ?> Days)</span>
+                    </div>
                 </div>
             </div>
         </div>
