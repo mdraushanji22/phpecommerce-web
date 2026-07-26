@@ -73,6 +73,7 @@ $flash = getFlashMessage();
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="<?php echo USER_URL; ?>/dashboard.php">Dashboard</a></li>
                             <li><a class="dropdown-item" href="<?php echo USER_URL; ?>/orders.php">My Orders</a></li>
+                            <li><a class="dropdown-item" href="<?php echo USER_URL; ?>/returns.php">My Returns</a></li>
                             <li><a class="dropdown-item" href="<?php echo USER_URL; ?>/profile.php">Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/logout.php">Logout</a></li>

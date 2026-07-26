@@ -46,6 +46,17 @@ $flash = getFlashMessage();
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo ADMIN_URL; ?>/users.php"><i class="bi bi-people"></i> Users</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo ADMIN_URL; ?>/returns.php">
+                            <i class="bi bi-arrow-return-left"></i> Returns
+                            <?php
+                            $returnCount = getReturnRequestCount();
+                            if ($returnCount > 0):
+                            ?>
+                            <span class="badge bg-danger rounded-pill"><?php echo $returnCount; ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">

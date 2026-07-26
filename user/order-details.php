@@ -83,26 +83,64 @@ $orderItems = $stmt->fetchAll();
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Subtotal</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($orderItems as $item): ?>
+                                <?php
+                                $returnElig = isReturnEligible($order);
+                                $hasReturn = hasActiveReturn($item['id'], $userId);
+                                $canReturn = $returnElig['eligible'] && !$hasReturn;
+                                ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($item['product_title']); ?></td>
                                     <td><?php echo formatPrice($item['product_price']); ?></td>
                                     <td><?php echo $item['quantity']; ?></td>
                                     <td><?php echo formatPrice($item['subtotal']); ?></td>
+                                    <td>
+                                        <?php if ($hasReturn): ?>
+                                            <a href="<?php echo USER_URL; ?>/returns.php" class="btn btn-sm btn-outline-info">
+                                                <i class="bi bi-arrow-return-left"></i> Return Status
+                                            </a>
+                                        <?php elseif ($canReturn): ?>
+                                            <a href="<?php echo USER_URL; ?>/return-request.php?order_id=<?php echo $orderId; ?>&item_id=<?php echo $item['id']; ?>" 
+                                               class="btn btn-sm btn-outline-warning">
+                                                <i class="bi bi-arrow-return-left"></i> Return
+                                            </a>
+                                        <?php else: ?>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock-history"></i> <?php echo $returnElig['reason']; ?>
+                                            </small>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="3" class="text-end">Total Amount:</th>
+                                    <th colspan="4" class="text-end">Total Amount:</th>
                                     <th><?php echo formatPrice($order['total_amount']); ?></th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
+
+                    <?php
+                    $returnEligGlobal = isReturnEligible($order);
+                    if ($returnEligGlobal['eligible'] && $order['order_status'] === 'completed'):
+                    ?>
+                    <div class="alert alert-info d-flex align-items-center mt-3">
+                        <i class="bi bi-info-circle fs-5 me-2"></i>
+                        <div>
+                            <strong><?php echo $returnEligGlobal['days_left']; ?> day<?php echo $returnEligGlobal['days_left'] !== 1 ? 's' : ''; ?> remaining</strong> to return products from this order.
+                            <div class="progress mt-2" style="height: 4px; max-width: 200px;">
+                                <div class="progress-bar bg-<?php echo $returnEligGlobal['days_left'] > 3 ? 'success' : 'warning'; ?>" 
+                                     style="width: <?php echo ($returnEligGlobal['days_left'] / 7) * 100; ?>%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

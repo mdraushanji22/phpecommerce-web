@@ -55,6 +55,9 @@ $recentOrders = $stmt->fetchAll();
                         <a href="<?php echo USER_URL; ?>/orders.php" class="list-group-item list-group-item-action">
                             <i class="bi bi-bag-check"></i> My Orders
                         </a>
+                        <a href="<?php echo USER_URL; ?>/returns.php" class="list-group-item list-group-item-action">
+                            <i class="bi bi-arrow-return-left"></i> My Returns
+                        </a>
                         <a href="<?php echo USER_URL; ?>/profile.php" class="list-group-item list-group-item-action">
                             <i class="bi bi-person"></i> Profile
                         </a>

@@ -160,4 +160,188 @@ function timeAgo($datetime) {
     
     return date('M d, Y', $timestamp);
 }
+
+// ==================== RETURN SYSTEM FUNCTIONS ====================
+
+// Check if an order item is eligible for return (7-day window from delivery)
+function isReturnEligible($order, $orderItem = null) {
+    if ($order['order_status'] !== 'completed') {
+        return ['eligible' => false, 'reason' => 'Order has not been delivered yet.'];
+    }
+    // Use updated_at as approximate delivery date (when status changed to completed)
+    $deliveryDate = $order['updated_at'] ?? $order['created_at'];
+    $daysSinceDelivery = (time() - strtotime($deliveryDate)) / 86400;
+    if ($daysSinceDelivery > 7) {
+        return ['eligible' => false, 'reason' => 'The 7-day return period has expired.'];
+    }
+    return ['eligible' => true, 'days_left' => ceil(7 - $daysSinceDelivery)];
+}
+
+// Check if a return request already exists for an order item by a user
+function hasActiveReturn($orderItemId, $userId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT id FROM returns WHERE order_item_id = ? AND user_id = ? AND return_status NOT IN ('rejected', 'refund_completed')");
+    $stmt->execute([$orderItemId, $userId]);
+    return $stmt->fetch() !== false;
+}
+
+// Calculate remaining days for return
+function getRemainingReturnDays($order) {
+    $deliveryDate = $order['updated_at'] ?? $order['created_at'];
+    $daysSinceDelivery = (time() - strtotime($deliveryDate)) / 86400;
+    $remaining = 7 - $daysSinceDelivery;
+    return max(0, ceil($remaining));
+}
+
+// Get return reason label
+function getReturnReasonLabel($reason) {
+    $labels = [
+        'wrong_product' => 'Wrong Product Received',
+        'damaged' => 'Damaged Product',
+        'not_as_described' => 'Product Not as Described',
+        'size_issue' => 'Size Issue',
+        'quality_issue' => 'Quality Issue',
+        'other' => 'Other'
+    ];
+    return $labels[$reason] ?? ucfirst(str_replace('_', ' ', $reason));
+}
+
+// Get return status label
+function getReturnStatusLabel($status) {
+    $labels = [
+        'requested' => 'Return Requested',
+        'under_review' => 'Under Review',
+        'approved' => 'Approved',
+        'rejected' => 'Rejected',
+        'pickup_scheduled' => 'Pickup Scheduled',
+        'returned' => 'Returned',
+        'refund_completed' => 'Refund Completed'
+    ];
+    return $labels[$status] ?? ucfirst(str_replace('_', ' ', $status));
+}
+
+// Get return status badge class
+function getReturnStatusBadge($status) {
+    $badges = [
+        'requested' => 'warning',
+        'under_review' => 'info',
+        'approved' => 'success',
+        'rejected' => 'danger',
+        'pickup_scheduled' => 'primary',
+        'returned' => 'secondary',
+        'refund_completed' => 'success'
+    ];
+    return $badges[$status] ?? 'secondary';
+}
+
+// Get refund status badge class
+function getRefundStatusBadge($status) {
+    $badges = [
+        'pending' => 'warning',
+        'processing' => 'info',
+        'completed' => 'success'
+    ];
+    return $badges[$status] ?? 'secondary';
+}
+
+// Get return images for a return request
+function getReturnImages($returnId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM return_images WHERE return_id = ? ORDER BY created_at ASC");
+    $stmt->execute([$returnId]);
+    return $stmt->fetchAll();
+}
+
+// Get return status history for a return request
+function getReturnStatusHistory($returnId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM return_status_history WHERE return_id = ? ORDER BY created_at ASC");
+    $stmt->execute([$returnId]);
+    return $stmt->fetchAll();
+}
+
+// Log a return status change
+function logReturnStatus($returnId, $oldStatus, $newStatus, $remark = null, $changedBy = null, $changedByType = 'admin') {
+    $db = getDB();
+    $stmt = $db->prepare("INSERT INTO return_status_history (return_id, old_status, new_status, remark, changed_by, changed_by_type, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+    $stmt->execute([$returnId, $oldStatus, $newStatus, $remark, $changedBy, $changedByType]);
+}
+
+// Upload return images
+function uploadReturnImages($files, $returnId) {
+    $db = getDB();
+    $targetDir = UPLOAD_DIR . 'returns/';
+    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $uploaded = [];
+
+    if (!isset($files['images']) || empty($files['images']['name'][0])) {
+        return $uploaded;
+    }
+
+    $fileCount = count($files['images']['name']);
+    for ($i = 0; $i < $fileCount; $i++) {
+        $file = [
+            'name' => $files['images']['name'][$i],
+            'type' => $files['images']['type'][$i],
+            'tmp_name' => $files['images']['tmp_name'][$i],
+            'error' => $files['images']['error'][$i],
+            'size' => $files['images']['size'][$i]
+        ];
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            continue;
+        }
+
+        $fileExt = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($fileExt, $allowedTypes)) {
+            continue;
+        }
+
+        if ($file['size'] > 5000000) { // 5MB
+            continue;
+        }
+
+        $newFileName = 'return_' . $returnId . '_' . uniqid('', true) . '.' . $fileExt;
+        $targetPath = $targetDir . $newFileName;
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            $stmt = $db->prepare("INSERT INTO return_images (return_id, image_name, created_at) VALUES (?, ?, NOW())");
+            $stmt->execute([$returnId, $newFileName]);
+            $uploaded[] = $newFileName;
+        }
+    }
+
+    return $uploaded;
+}
+
+// Delete return images from disk
+function deleteReturnImages($returnId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT image_name FROM return_images WHERE return_id = ?");
+    $stmt->execute([$returnId]);
+    $images = $stmt->fetchAll();
+
+    $targetDir = UPLOAD_DIR . 'returns/';
+    foreach ($images as $img) {
+        $path = $targetDir . $img['image_name'];
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
+
+    $stmt = $db->prepare("DELETE FROM return_images WHERE return_id = ?");
+    $stmt->execute([$returnId]);
+}
+
+// Get return request count for admin badge
+function getReturnRequestCount() {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT COUNT(*) as cnt FROM returns WHERE return_status IN ('requested', 'under_review')");
+    $stmt->execute();
+    return $stmt->fetch()['cnt'] ?? 0;
+}
 ?>

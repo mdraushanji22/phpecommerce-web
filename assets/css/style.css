@@ -205,3 +205,77 @@ img {
     border-style: solid;
     background-color: rgba(13, 110, 253, 0.05);
 }
+
+/* ==================== RETURN SYSTEM STYLES ==================== */
+
+/* Timeline dots for status history */
+.timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.timeline {
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+    z-index: 0;
+}
+
+.timeline .d-flex {
+    position: relative;
+    z-index: 1;
+}
+
+.timeline .timeline-dot {
+    position: relative;
+    z-index: 2;
+}
+
+/* Return card hover effects */
+.card.border-primary:hover,
+.card.border-success:hover,
+.card.border-warning:hover,
+.card.border-danger:hover,
+.card.border-info:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Return status progress bar animation */
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+/* Return form image preview */
+#imagePreview img {
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+#imagePreview img:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color) !important;
+}
+
+/* Return table row hover */
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.04);
+}
+
+/* Stats cards on return page */
+.card .h4,
+.card .h3 {
+    font-weight: 700;
+}
