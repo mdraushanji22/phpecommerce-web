@@ -28,8 +28,7 @@ A complete, professional, and production-ready E-commerce website built with **C
 - **Database:** MySQL with PDO
 - **Frontend:** Bootstrap 5
 - **Icons:** Bootstrap Icons
-- **Security:** PDO Prepared Statements, Password Hashing, Session Management
-
+- **Security:** PDO Prepared Statements, Password Hashing, Session products
 ## 📁 Project Structure
 
 ```
@@ -192,9 +191,9 @@ The system includes 8 main tables:
 The database.sql file includes:
 - 1 Admin account
 - 5 Sample categories
-- 9 Sample products
-
-## 📱 Responsive Design
+- 9 Sample pproduct
+- 10 Return functionality add
+- # 📱 Responsive Design
 
 The website is fully responsive and tested on:
 - 📱 Mobile devices (320px and up)
