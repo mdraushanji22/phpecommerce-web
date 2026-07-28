@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/functions.php';
 
 requireUserLogin();
 
-$pageTitle = 'Shopping Cart';
+$pageTitle = t('shopping_cart', 'Shopping Cart');
 require_once __DIR__ . '/includes/header.php';
 
     $db     = getDB();
@@ -31,7 +31,7 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container my-5">
-    <h2 class="mb-4"><i class="bi bi-cart3"></i> Shopping Cart</h2>
+    <h2 class="mb-4"><i class="bi bi-cart3"></i> <?php echo t('shopping_cart', 'Shopping Cart'); ?></h2>
 
     <?php if (count($cartItems) > 0): ?>
     <div class="row">
@@ -42,10 +42,10 @@ require_once __DIR__ . '/includes/header.php';
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Subtotal</th>
+                                    <th><?php echo t('product', 'Product'); ?></th>
+                                    <th><?php echo t('price', 'Price'); ?></th>
+                                    <th><?php echo t('quantity', 'Quantity'); ?></th>
+                                    <th><?php echo t('subtotal', 'Subtotal'); ?></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -75,13 +75,13 @@ require_once __DIR__ . '/includes/header.php';
                                             <input type="number" name="quantity" class="form-control form-control-sm"
                                                    style="width: 70px;" value="<?php echo $item['quantity']; ?>"
                                                    min="1" max="<?php echo $item['stock']; ?>" required>
-                                            <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
+                                            <button type="submit" class="btn btn-sm btn-primary ms-2"><?php echo t('update', 'Update'); ?></button>
                                         </form>
                                     </td>
                                     <td><?php echo formatPrice($item['price'] * $item['quantity']); ?></td>
                                     <td>
                                         <form method="POST" action="<?php echo SITE_URL; ?>/cart-action.php"
-                                              onsubmit="return confirm('Remove this item from cart?');">
+                                              onsubmit="return confirm('<?php echo t('remove', 'Remove'); ?>?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="cart_id" value="<?php echo $item['cart_id']; ?>">
                                             <button type="submit" class="btn btn-sm btn-danger">
@@ -99,7 +99,7 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="mt-3">
                 <a href="<?php echo SITE_URL; ?>/products.php" class="btn btn-outline-primary">
-                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                    <i class="bi bi-arrow-left"></i> <?php echo t('continue_shopping', 'Continue Shopping'); ?>
                 </a>
             </div>
         </div>
@@ -107,32 +107,32 @@ require_once __DIR__ . '/includes/header.php';
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Order Summary</h5>
+                    <h5 class="mb-0"><?php echo t('order_summary', 'Order Summary'); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal:</span>
+                        <span><?php echo t('subtotal', 'Subtotal'); ?>:</span>
                         <span><?php echo formatPrice($subtotal); ?></span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Shipping:</span>
-                        <span><?php echo $shipping > 0 ? formatPrice($shipping) : 'FREE'; ?></span>
+                        <span><?php echo t('shipping', 'Shipping'); ?>:</span>
+                        <span><?php echo $shipping > 0 ? formatPrice($shipping) : t('free', 'FREE'); ?></span>
                     </div>
                     <?php if ($shipping > 0): ?>
-                    <small class="text-muted">Free shipping on orders over ₹500</small>
+                    <small class="text-muted"><?php echo t('free_shipping_msg', 'Free shipping on orders over ₹500'); ?></small>
                     <?php endif; ?>
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
-                        <strong>Total:</strong>
+                        <strong><?php echo t('total', 'Total'); ?>:</strong>
                         <strong class="text-primary"><?php echo formatPrice($total); ?></strong>
                     </div>
                     <!-- Estimated Delivery -->
                     <div class="delivery-badge w-100 justify-content-center mb-3">
                         <span class="delivery-icon"><i class="bi bi-truck"></i></span>
-                        <span>Estimated Delivery: <strong><?php echo getEstimatedDeliveryDisplay(); ?></strong></span>
+                        <span><?php echo t('estimated_delivery', 'Estimated Delivery'); ?>: <strong><?php echo getEstimatedDeliveryDisplay(); ?></strong></span>
                     </div>
                     <a href="<?php echo SITE_URL; ?>/checkout.php" class="btn btn-success w-100">
-                        <i class="bi bi-credit-card"></i> Proceed to Checkout
+                        <i class="bi bi-credit-card"></i> <?php echo t('proceed_to_checkout', 'Proceed to Checkout'); ?>
                     </a>
                 </div>
             </div>
@@ -141,8 +141,8 @@ require_once __DIR__ . '/includes/header.php';
     <?php else: ?>
     <div class="alert alert-info text-center">
         <i class="bi bi-cart-x fs-1"></i>
-        <p class="mt-3">Your cart is empty 🛒</p>
-        <a href="<?php echo SITE_URL; ?>/products.php" class="btn btn-primary">Start Shopping</a>
+        <p class="mt-3"><?php echo t('empty_cart', 'Your cart is empty'); ?> 🛒</p>
+        <a href="<?php echo SITE_URL; ?>/products.php" class="btn btn-primary"><?php echo t('start_shopping', 'Start Shopping'); ?></a>
     </div>
     <?php endif; ?>
 </div>

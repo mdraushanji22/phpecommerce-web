@@ -375,4 +375,353 @@ function getReturnRequestCount() {
     $stmt->execute();
     return $stmt->fetch()['cnt'] ?? 0;
 }
+
+// ==================== LANGUAGE / TRANSLATION SYSTEM ====================
+
+// Load translations for a given language code
+function loadTranslations($langCode = 'en') {
+    $db = getDB();
+    $cacheKey = 'translations_' . $langCode;
+    
+    // Use session cache to avoid repeated DB queries
+    if (isset($_SESSION[$cacheKey])) {
+        return $_SESSION[$cacheKey];
+    }
+    
+    $stmt = $db->prepare("SELECT translation_key, translation_value FROM site_translations WHERE lang_code = ?");
+    $stmt->execute([$langCode]);
+    $translations = [];
+    while ($row = $stmt->fetch()) {
+        $translations[$row['translation_key']] = $row['translation_value'];
+    }
+    
+    // If translations not found for this language, fall back to English
+    if (empty($translations) && $langCode !== 'en') {
+        return loadTranslations('en');
+    }
+    
+    $_SESSION[$cacheKey] = $translations;
+    return $translations;
+}
+
+// Get current language code
+function getCurrentLang() {
+    return $_SESSION['site_lang'] ?? 'en';
+}
+
+// Translate a key
+function t($key, $default = null) {
+    $translations = loadTranslations(getCurrentLang());
+    return $translations[$key] ?? $default ?? ucfirst(str_replace('_', ' ', $key));
+}
+
+// Set language
+function setLanguage($langCode) {
+    $validLangs = ['en', 'hi'];
+    if (in_array($langCode, $validLangs)) {
+        $_SESSION['site_lang'] = $langCode;
+        // Clear translation cache
+        unset($_SESSION['translations_en'], $_SESSION['translations_hi']);
+    }
+}
+
+// ==================== CSRF PROTECTION ====================
+
+// Generate CSRF token
+function generateCSRFToken() {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+// Get hidden input for CSRF
+function csrfField() {
+    return '<input type="hidden" name="csrf_token" value="' . generateCSRFToken() . '">';
+}
+
+// Verify CSRF token
+function verifyCSRFToken() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return true;
+    }
+    $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    return hash_equals($_SESSION['csrf_token'] ?? '', $token);
+}
+
+// ==================== REVIEW SYSTEM FUNCTIONS ====================
+
+// Get average rating for a product
+function getAverageRating($productId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as total_reviews FROM reviews WHERE product_id = ? AND status = 'active'");
+    $stmt->execute([$productId]);
+    $result = $stmt->fetch();
+    return [
+        'average' => $result['avg_rating'] ? round($result['avg_rating'], 1) : 0,
+        'total' => (int)$result['total_reviews']
+    ];
+}
+
+// Get reviews for a product
+function getProductReviews($productId, $limit = 50, $offset = 0) {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT r.*, u.name as user_name 
+        FROM reviews r 
+        JOIN users u ON r.user_id = u.id 
+        WHERE r.product_id = ? AND r.status = 'active' 
+        ORDER BY r.created_at DESC 
+        LIMIT ? OFFSET ?
+    ");
+    $stmt->execute([$productId, $limit, $offset]);
+    return $stmt->fetchAll();
+}
+
+// Check if user has purchased this product
+function hasUserPurchasedProduct($userId, $productId) {
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT COUNT(*) as cnt 
+        FROM order_items oi 
+        JOIN orders o ON oi.order_id = o.id 
+        WHERE o.user_id = ? AND oi.product_id = ? AND o.order_status = 'completed'
+    ");
+    $stmt->execute([$userId, $productId]);
+    return $stmt->fetch()['cnt'] > 0;
+}
+
+// Check if user already reviewed this product
+function hasUserReviewedProduct($userId, $productId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT id, rating, comment FROM reviews WHERE user_id = ? AND product_id = ?");
+    $stmt->execute([$userId, $productId]);
+    return $stmt->fetch();
+}
+
+// Get rating distribution
+function getRatingDistribution($productId) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT rating, COUNT(*) as cnt FROM reviews WHERE product_id = ? AND status = 'active' GROUP BY rating ORDER BY rating DESC");
+    $stmt->execute([$productId]);
+    $dist = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+    while ($row = $stmt->fetch()) {
+        $dist[(int)$row['rating']] = (int)$row['cnt'];
+    }
+    return $dist;
+}
+
+// Generate star HTML
+function renderStars($rating, $size = '') {
+    $sizeClass = $size ? ' fs-' . $size : '';
+    $html = '<span class="text-warning' . $sizeClass . '">';
+    for ($i = 1; $i <= 5; $i++) {
+        if ($i <= floor($rating)) {
+            $html .= '<i class="bi bi-star-fill"></i>';
+        } elseif ($i - $rating < 1 && $i - $rating > 0) {
+            $html .= '<i class="bi bi-star-half"></i>';
+        } else {
+            $html .= '<i class="bi bi-star"></i>';
+        }
+    }
+    $html .= '</span>';
+    return $html;
+}
+
+// ==================== WISHLIST SYSTEM FUNCTIONS ====================
+
+// Get wishlist count for a user
+function getWishlistCount() {
+    if (!isUserLoggedIn()) {
+        return 0;
+    }
+    $db = getDB();
+    $stmt = $db->prepare("SELECT COUNT(*) as cnt FROM wishlist WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    return $stmt->fetch()['cnt'] ?? 0;
+}
+
+// Check if product is in wishlist
+function isInWishlist($productId) {
+    if (!isUserLoggedIn()) {
+        return false;
+    }
+    $db = getDB();
+    $stmt = $db->prepare("SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?");
+    $stmt->execute([$_SESSION['user_id'], $productId]);
+    return $stmt->fetch() !== false;
+}
+
+// Get wishlist items for a user
+function getWishlistItems() {
+    if (!isUserLoggedIn()) {
+        return [];
+    }
+    $db = getDB();
+    $stmt = $db->prepare("
+        SELECT w.*, p.title, p.price, p.image, p.stock, p.status as product_status, c.name as category_name
+        FROM wishlist w
+        JOIN products p ON w.product_id = p.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        WHERE w.user_id = ?
+        ORDER BY w.created_at DESC
+    ");
+    $stmt->execute([$_SESSION['user_id']]);
+    return $stmt->fetchAll();
+}
+
+// ==================== ADVANCED SEARCH / FILTER FUNCTIONS ====================
+
+// Get all active brands
+function getAllBrands() {
+    $db = getDB();
+    return $db->query("SELECT id, name, slug FROM brands WHERE status = 'active' ORDER BY name")->fetchAll();
+}
+
+// Get all active subcategories
+function getAllSubcategories($categoryId = null) {
+    $db = getDB();
+    if ($categoryId) {
+        $stmt = $db->prepare("SELECT id, name, slug, category_id FROM subcategories WHERE category_id = ? AND status = 'active' ORDER BY name");
+        $stmt->execute([$categoryId]);
+        return $stmt->fetchAll();
+    }
+    return $db->query("SELECT s.id, s.name, s.slug, s.category_id, c.name as category_name FROM subcategories s JOIN categories c ON s.category_id = c.id WHERE s.status = 'active' ORDER BY c.name, s.name")->fetchAll();
+}
+
+// Get min and max product prices
+function getPriceRange() {
+    $db = getDB();
+    $result = $db->query("SELECT MIN(price) as min_price, MAX(price) as max_price FROM products WHERE status = 'active'")->fetch();
+    return [
+        'min' => (int)floor($result['min_price'] ?? 0),
+        'max' => (int)ceil($result['max_price'] ?? 10000)
+    ];
+}
+
+// Advanced product search with filters
+function searchProducts($filters = [], $page = 1, $perPage = 12) {
+    $db = getDB();
+    $where = ["p.status = 'active'"];
+    $params = [];
+
+    // Category filter
+    if (!empty($filters['category_id'])) {
+        $where[] = "p.category_id = ?";
+        $params[] = (int)$filters['category_id'];
+    }
+
+    // Subcategory filter
+    if (!empty($filters['subcategory_id'])) {
+        $where[] = "p.subcategory_id = ?";
+        $params[] = (int)$filters['subcategory_id'];
+    }
+
+    // Brand filter
+    if (!empty($filters['brand_id'])) {
+        $where[] = "p.brand_id = ?";
+        $params[] = (int)$filters['brand_id'];
+    }
+
+    // Price range
+    if (isset($filters['min_price']) && $filters['min_price'] !== '') {
+        $where[] = "p.price >= ?";
+        $params[] = (float)$filters['min_price'];
+    }
+    if (isset($filters['max_price']) && $filters['max_price'] !== '') {
+        $where[] = "p.price <= ?";
+        $params[] = (float)$filters['max_price'];
+    }
+
+    // Minimum rating
+    if (!empty($filters['min_rating'])) {
+        $having = "HAVING avg_rating >= ?";
+        $params[] = (float)$filters['min_rating'];
+    } else {
+        $having = "";
+    }
+
+    // Availability
+    if (isset($filters['in_stock']) && $filters['in_stock'] === '1') {
+        $where[] = "p.stock > 0";
+    }
+    if (isset($filters['in_stock']) && $filters['in_stock'] === '0') {
+        $where[] = "p.stock = 0";
+    }
+
+    // Featured
+    if (!empty($filters['featured'])) {
+        $where[] = "p.is_featured = 1";
+    }
+
+    // Discounted
+    if (!empty($filters['discounted'])) {
+        $where[] = "p.discount_percent > 0";
+    }
+
+    // Search query
+    if (!empty($filters['q'])) {
+        $where[] = "(p.title LIKE ? OR p.description LIKE ?)";
+        $searchTerm = "%" . $filters['q'] . "%";
+        $params[] = $searchTerm;
+        $params[] = $searchTerm;
+    }
+
+    $whereClause = implode(' AND ', $where);
+
+    // Sorting
+    $orderBy = "p.created_at DESC";
+    if (!empty($filters['sort'])) {
+        switch ($filters['sort']) {
+            case 'price_low': $orderBy = "p.price ASC"; break;
+            case 'price_high': $orderBy = "p.price DESC"; break;
+            case 'newest': $orderBy = "p.created_at DESC"; break;
+            case 'oldest': $orderBy = "p.created_at ASC"; break;
+            case 'rating': $orderBy = "avg_rating DESC"; break;
+            case 'best_selling': $orderBy = "p.sales_count DESC"; break;
+            case 'popular': $orderBy = "review_count DESC"; break;
+            case 'az': $orderBy = "p.title ASC"; break;
+            case 'za': $orderBy = "p.title DESC"; break;
+        }
+    }
+
+    // Base query with subquery for ratings
+    $baseQuery = "
+        FROM products p 
+        LEFT JOIN (SELECT product_id, AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE status = 'active' GROUP BY product_id) rev ON rev.product_id = p.id
+        LEFT JOIN brands b ON p.brand_id = b.id
+        LEFT JOIN subcategories s ON p.subcategory_id = s.id
+        WHERE {$whereClause}
+    ";
+
+    // Count total
+    $countParams = $params;
+    if ($having) {
+        $countSql = "SELECT COUNT(*) as total FROM (SELECT p.id {$baseQuery} GROUP BY p.id {$having}) as filtered";
+    } else {
+        $countSql = "SELECT COUNT(*) as total {$baseQuery}";
+    }
+    $countStmt = $db->prepare($countSql);
+    $countStmt->execute($countParams);
+    $total = $countStmt->fetch()['total'];
+
+    // Get products
+    $offset = ($page - 1) * $perPage;
+    $params[] = $perPage;
+    $params[] = $offset;
+
+    $selectCols = "SELECT p.*, COALESCE(rev.avg_rating, 0) as avg_rating, COALESCE(rev.review_count, 0) as review_count, b.name as brand_name, s.name as subcategory_name";
+    $productQuery = "{$selectCols} {$baseQuery} GROUP BY p.id {$having} ORDER BY {$orderBy} LIMIT ? OFFSET ?";
+    $stmt = $db->prepare($productQuery);
+    $stmt->execute($params);
+    $products = $stmt->fetchAll();
+
+    return [
+        'products' => $products,
+        'total' => $total,
+        'total_pages' => ceil($total / $perPage),
+        'current_page' => $page,
+        'per_page' => $perPage
+    ];
+}
 ?>

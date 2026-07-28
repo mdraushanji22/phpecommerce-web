@@ -371,3 +371,95 @@ img {
         font-size: 1.4rem;
     }
 }
+
+/* ==================== REVIEW STYLES ==================== */
+
+.star-rating-input .star-btn {
+    transition: transform 0.15s ease, color 0.15s ease;
+    cursor: pointer;
+}
+
+.star-rating-input .star-btn:hover {
+    transform: scale(1.2);
+}
+
+.review-card {
+    transition: box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ==================== WISHLIST STYLES ==================== */
+
+.wishlist-btn {
+    transition: transform 0.2s ease;
+    z-index: 5;
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.2);
+}
+
+.wishlist-btn i {
+    transition: color 0.2s ease;
+}
+
+/* ==================== FILTER STYLES ==================== */
+
+.filter-sidebar {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.filter-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.search-page-link {
+    cursor: pointer;
+}
+
+/* Loading spinner for AJAX */
+.ajax-loading {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.ajax-loading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0d6efd;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==================== LANGUAGE SWITCHER ==================== */
+
+.dropdown-menu .change-lang {
+    cursor: pointer;
+}
+
+/* Price range dual input */
+.price-range-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.price-range-group span {
+    color: #6c757d;
+}

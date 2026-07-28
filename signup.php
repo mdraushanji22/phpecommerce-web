@@ -1,5 +1,8 @@
 <?php
-$pageTitle = 'Sign Up';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/functions.php';
+
+$pageTitle = t('sign_up', 'Sign Up');
 require_once __DIR__ . '/includes/header.php';
 
 // Redirect if already logged in
@@ -59,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-body p-5">
-                    <h2 class="text-center mb-4">Sign Up</h2>
+                    <h2 class="text-center mb-4"><?php echo t('create_account', 'Create Account'); ?></h2>
                     
                     <?php if ($error): ?>
                     <div class="alert alert-danger"><?php echo $error; ?></div>
@@ -76,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
+                            <label for="email" class="form-label"><?php echo t('email', 'Email'); ?> Address</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
                                 <input type="email" class="form-control" id="email" name="email" required
@@ -110,11 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                        placeholder="Re-enter your password">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                        <button type="submit" class="btn btn-primary w-100"><?php echo t('sign_up', 'Sign Up'); ?></button>
                     </form>
 
                     <div class="text-center mt-3">
-                        <p>Already have an account? <a href="<?php echo SITE_URL; ?>/login.php">Login</a></p>
+                        <p><?php echo t('already_have_account', 'Already have an account?'); ?> <a href="<?php echo SITE_URL; ?>/login.php"><?php echo t('login', 'Login'); ?></a></p>
                     </div>
                 </div>
             </div>

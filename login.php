@@ -1,5 +1,8 @@
 <?php
-$pageTitle = 'Login';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/functions.php';
+
+$pageTitle = t('login', 'Login');
 require_once __DIR__ . '/includes/header.php';
 
 // Redirect if already logged in
@@ -43,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-5">
             <div class="card shadow">
                 <div class="card-body p-5">
-                    <h2 class="text-center mb-4">Login</h2>
+                    <h2 class="text-center mb-4"><?php echo t('login_to_account', 'Login to your account'); ?></h2>
                     
                     <?php if ($error): ?>
                     <div class="alert alert-danger"><?php echo $error; ?></div>
@@ -51,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <form method="POST" action="">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
+                            <label for="email" class="form-label"><?php echo t('email', 'Email'); ?> Address</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
                                 <input type="email" class="form-control" id="email" name="email" required 
@@ -68,13 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         <div class="text-end mb-3">
-                            <a href="<?php echo SITE_URL; ?>/forgot-password.php" class="text-decoration-none small">Forgot Password?</a>
+                            <a href="<?php echo SITE_URL; ?>/forgot-password.php" class="text-decoration-none small"><?php echo t('forgot_password', 'Forgot Password?'); ?></a>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <button type="submit" class="btn btn-primary w-100"><?php echo t('login', 'Login'); ?></button>
                     </form>
 
                     <div class="text-center mt-3">
-                        <p>Don't have an account? <a href="<?php echo SITE_URL; ?>/signup.php">Sign Up</a></p>
+                        <p><?php echo t('dont_have_account', "Don't have an account?"); ?> <a href="<?php echo SITE_URL; ?>/signup.php"><?php echo t('sign_up', 'Sign Up'); ?></a></p>
                     </div>
                 </div>
             </div>

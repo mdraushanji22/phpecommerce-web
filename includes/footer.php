@@ -36,8 +36,25 @@
     <!-- Custom JS -->
     <script src="<?php echo SITE_URL; ?>/assets/js/main.js"></script>
 
-    <!-- Sticky Header Shadow Effect -->
+    <!-- Global CSRF token for AJAX -->
     <script>
+    var csrfTokenGlobal = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '';
+
+    // Language Switcher
+    document.querySelectorAll('.change-lang').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            var lang = this.dataset.lang;
+            var fd = new FormData();
+            fd.append('lang', lang);
+            fetch('<?php echo SITE_URL; ?>/api/language.php', { method: 'POST', body: fd })
+            .then(function(r) { return r.json(); })
+            .then(function(data) { if (data.success) location.reload(); })
+            .catch(function(err) { console.error('Language switch error:', err); });
+        });
+    });
+
+    // Sticky Header Shadow Effect
     (function() {
         var navbar = document.getElementById('mainNavbar');
         if (!navbar) return;

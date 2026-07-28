@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['payment_method'] ?? '') ==
     }
 }
 
-$pageTitle = 'Checkout';
+$pageTitle = t('checkout', 'Checkout');
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -123,13 +123,13 @@ require_once __DIR__ . '/includes/header.php';
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <div class="container my-5">
-    <h2 class="mb-4"><i class="bi bi-credit-card"></i> Checkout</h2>
+    <h2 class="mb-4"><i class="bi bi-credit-card"></i> <?php echo t('checkout', 'Checkout'); ?></h2>
 
     <div class="row">
         <div class="col-md-7">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Shipping Information</h5>
+                    <h5 class="mb-0"><?php echo t('shipping_info', 'Shipping Information'); ?></h5>
                 </div>
                 <div class="card-body">
                     <?php if ($error): ?>
@@ -138,7 +138,7 @@ require_once __DIR__ . '/includes/header.php';
 
                     <div class="mb-3">
                         <button type="button" class="btn btn-outline-primary w-100" id="useCurrentLocationBtn" onclick="useCurrentLocation()">
-                            <i class="bi bi-geo-alt"></i> Use My Current Location
+                            <i class="bi bi-geo-alt"></i> <?php echo t('use_current_location', 'Use My Current Location'); ?>
                         </button>
                         <div id="locationFillStatus" class="mt-2" style="display:none;"></div>
                     </div>
@@ -146,7 +146,7 @@ require_once __DIR__ . '/includes/header.php';
                     <form id="checkoutForm" method="POST" action="">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">Full Name *</label>
+                                <label for="name" class="form-label"><?php echo t('full_name', 'Full Name'); ?> *</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
                                     <input type="text" class="form-control" id="name" name="name" required
@@ -155,7 +155,7 @@ require_once __DIR__ . '/includes/header.php';
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email *</label>
+                                <label for="email" class="form-label"><?php echo t('email', 'Email'); ?> *</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
                                     <input type="email" class="form-control" id="email" name="email" required
@@ -166,7 +166,7 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
 
                         <div class="mb-3">
-                            <label for="mobile" class="form-label">Mobile Number *</label>
+                            <label for="mobile" class="form-label"><?php echo t('mobile_number', 'Mobile Number'); ?> *</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
                                 <input type="text" class="form-control" id="mobile" name="mobile" required
@@ -176,7 +176,7 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
 
                         <div class="mb-3">
-                            <label for="address" class="form-label">Address *</label>
+                            <label for="address" class="form-label"><?php echo t('address', 'Address'); ?> *</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
                                 <textarea class="form-control" id="address" name="address" rows="3" required
@@ -186,7 +186,7 @@ require_once __DIR__ . '/includes/header.php';
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="city" class="form-label">City *</label>
+                                <label for="city" class="form-label"><?php echo t('city', 'City'); ?> *</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-building"></i></span>
                                     <input type="text" class="form-control" id="city" name="city" required
@@ -195,7 +195,7 @@ require_once __DIR__ . '/includes/header.php';
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="state" class="form-label">State *</label>
+                                <label for="state" class="form-label"><?php echo t('state', 'State'); ?> *</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-map"></i></span>
                                     <input type="text" class="form-control" id="state" name="state" required
@@ -206,7 +206,7 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
 
                         <div class="mb-3">
-                            <label for="pincode" class="form-label">Pincode *</label>
+                            <label for="pincode" class="form-label"><?php echo t('pincode', 'Pincode'); ?> *</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-pin-map-fill"></i></span>
                                 <input type="text" class="form-control" id="pincode" name="pincode" required
@@ -218,17 +218,17 @@ require_once __DIR__ . '/includes/header.php';
                         <!-- Payment Method Selection -->
                         <div class="card bg-light mb-3">
                             <div class="card-body">
-                                <h6>Payment Method</h6>
+                                <h6><?php echo t('payment_method', 'Payment Method'); ?></h6>
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="payment_method" id="cod" value="COD" checked onchange="togglePaymentMethod()">
                                     <label class="form-check-label" for="cod">
-                                        <i class="bi bi-cash"></i> Cash on Delivery (COD)
+                                        <i class="bi bi-cash"></i> <?php echo t('cod', 'Cash on Delivery (COD)'); ?>
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="payment_method" id="razorpay" value="Razorpay" onchange="togglePaymentMethod()">
                                     <label class="form-check-label" for="razorpay">
-                                        <i class="bi bi-credit-card"></i> Pay Online (Razorpay) - UPI / Card / NetBanking / Wallets
+                                        <i class="bi bi-credit-card"></i> <?php echo t('pay_online', 'Pay Online (Razorpay)'); ?> - UPI / Card / NetBanking / Wallets
                                     </label>
                                 </div>
                             </div>
@@ -236,12 +236,12 @@ require_once __DIR__ . '/includes/header.php';
 
                         <!-- COD Submit Button -->
                         <button type="submit" id="codButton" class="btn btn-success w-100">
-                            <i class="bi bi-check-circle"></i> Place Order (COD)
+                            <i class="bi bi-check-circle"></i> <?php echo t('place_order', 'Place Order'); ?> (COD)
                         </button>
 
                         <!-- Razorpay Pay Now Button -->
                         <button type="button" id="razorpayButton" class="btn btn-success w-100" style="display:none;" onclick="initiateRazorpayPayment()">
-                            <i class="bi bi-shield-lock"></i> Pay <?php echo formatPrice($total); ?> Now
+                            <i class="bi bi-shield-lock"></i> <?php echo t('pay_now', 'Pay Now'); ?> <?php echo formatPrice($total); ?>
                         </button>
                     </form>
                 </div>
@@ -251,11 +251,11 @@ require_once __DIR__ . '/includes/header.php';
         <div class="col-md-5">
             <div class="card">
                 <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">Order Summary</h5>
+                    <h5 class="mb-0"><?php echo t('order_summary', 'Order Summary'); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <h6>Items (<?php echo count($cartItems); ?>):</h6>
+                        <h6><?php echo t('items', 'Items'); ?> (<?php echo count($cartItems); ?>):</h6>
                         <?php foreach ($cartItems as $item): ?>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted"><?php echo htmlspecialchars($item['title']); ?> x <?php echo $item['quantity']; ?></span>
@@ -267,22 +267,22 @@ require_once __DIR__ . '/includes/header.php';
                     <hr>
 
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal:</span>
+                        <span><?php echo t('subtotal', 'Subtotal'); ?>:</span>
                         <span><?php echo formatPrice($subtotal); ?></span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Shipping:</span>
-                        <span><?php echo $shipping > 0 ? formatPrice($shipping) : 'FREE'; ?></span>
+                        <span><?php echo t('shipping', 'Shipping'); ?>:</span>
+                        <span><?php echo $shipping > 0 ? formatPrice($shipping) : t('free', 'FREE'); ?></span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between">
-                        <strong>Total Amount:</strong>
+                        <strong><?php echo t('total_amount', 'Total Amount'); ?>:</strong>
                         <strong class="text-success"><?php echo formatPrice($total); ?></strong>
                     </div>
                     <!-- Estimated Delivery -->
                     <div class="delivery-badge w-100 justify-content-center mt-3">
                         <span class="delivery-icon"><i class="bi bi-truck"></i></span>
-                        <span>Expected Delivery: <strong><?php echo getEstimatedDeliveryDisplay(); ?></strong> (Within <?php echo DELIVERY_DAYS; ?> Days)</span>
+                        <span><?php echo t('estimated_delivery', 'Estimated Delivery'); ?>: <strong><?php echo getEstimatedDeliveryDisplay(); ?></strong> (Within <?php echo DELIVERY_DAYS; ?> Days)</span>
                     </div>
                 </div>
             </div>
