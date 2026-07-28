@@ -4,9 +4,6 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireUserLogin();
 
-$pageTitle = 'Order Details';
-require_once __DIR__ . '/../includes/header.php';
-
 $db = getDB();
 $userId = $_SESSION['user_id'];
 $orderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -25,6 +22,9 @@ if (!$order) {
 $stmt = $db->prepare("SELECT * FROM order_items WHERE order_id = ? AND order_id IN (SELECT id FROM orders WHERE id = ? AND user_id = ?)");
 $stmt->execute([$orderId, $orderId, $userId]);
 $orderItems = $stmt->fetchAll();
+
+$pageTitle = 'Order Details';
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="container my-5">
@@ -54,7 +54,7 @@ $orderItems = $stmt->fetchAll();
                         <div class="col-md-6">
                             <p><strong>Order Status:</strong> 
                                 <?php
-                                $badgeClass = '';
+                                $badgeClass = 'secondary';
                                 switch ($order['order_status']) {
                                     case 'pending': $badgeClass = 'warning'; break;
                                     case 'processing': $badgeClass = 'info'; break;

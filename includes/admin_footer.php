@@ -18,13 +18,27 @@
         }
         updateIcon();
 
-        toggle.addEventListener('click', function() {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
             var isDark = document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode', isDark);
             var theme = isDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
             updateIcon();
         });
+
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!localStorage.getItem('theme')) {
+                    var theme = e.matches ? 'dark' : 'light';
+                    document.body.classList.toggle('dark-mode', e.matches);
+                    document.documentElement.classList.toggle('dark-mode', e.matches);
+                    document.documentElement.setAttribute('data-theme', theme);
+                    updateIcon();
+                }
+            });
+        }
     })();
     </script>
 </body>

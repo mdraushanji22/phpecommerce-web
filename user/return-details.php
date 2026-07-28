@@ -4,9 +4,6 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireUserLogin();
 
-$pageTitle = 'Return Details';
-require_once __DIR__ . '/../includes/header.php';
-
 $db = getDB();
 $userId = $_SESSION['user_id'];
 $returnId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -40,6 +37,9 @@ if ($return['return_status'] === 'requested' || $return['return_status'] === 'un
     $ord = $stmt2->fetch();
     if ($ord) $remainingDays = getRemainingReturnDays($ord);
 }
+
+$pageTitle = 'Return Details';
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="container my-5">

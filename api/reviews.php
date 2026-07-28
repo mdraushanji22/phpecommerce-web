@@ -47,7 +47,7 @@ try {
 
             $productId = (int)($_POST['product_id'] ?? 0);
             $rating = (int)($_POST['rating'] ?? 0);
-            $comment = trim($_POST['comment'] ?? '');
+            $comment = sanitize($_POST['comment'] ?? '');
             $userId = $_SESSION['user_id'];
 
             if (!$productId || $rating < 1 || $rating > 5) {
@@ -55,7 +55,7 @@ try {
                 exit;
             }
 
-            if (empty($comment) || strlen($comment) < 10) {
+            if (empty($comment) || strlen(strip_tags($comment)) < 10) {
                 echo json_encode(['success' => false, 'message' => 'Review must be at least 10 characters']);
                 exit;
             }
@@ -101,7 +101,7 @@ try {
 
             $reviewId = (int)($_POST['review_id'] ?? 0);
             $rating = (int)($_POST['rating'] ?? 0);
-            $comment = trim($_POST['comment'] ?? '');
+            $comment = sanitize($_POST['comment'] ?? '');
             $userId = $_SESSION['user_id'];
 
             if (!$reviewId || $rating < 1 || $rating > 5) {
@@ -109,7 +109,7 @@ try {
                 exit;
             }
 
-            if (empty($comment) || strlen($comment) < 10) {
+            if (empty($comment) || strlen(strip_tags($comment)) < 10) {
                 echo json_encode(['success' => false, 'message' => 'Review must be at least 10 characters']);
                 exit;
             }

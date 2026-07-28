@@ -4,9 +4,6 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireUserLogin();
 
-$pageTitle = 'Return Product';
-require_once __DIR__ . '/../includes/header.php';
-
 $db = getDB();
 $userId = $_SESSION['user_id'];
 $orderId = isset($_GET['order_id']) ? (int)$_GET['order_id'] : 0;
@@ -123,6 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $remainingDays = getRemainingReturnDays($order);
+
+$pageTitle = 'Return Product';
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="container my-5">

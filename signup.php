@@ -2,9 +2,6 @@
 require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/includes/functions.php';
 
-$pageTitle = t('sign_up', 'Sign Up');
-require_once __DIR__ . '/includes/header.php';
-
 // Redirect if already logged in
 if (isUserLoggedIn()) {
     header('Location: ' . USER_URL . '/dashboard.php');
@@ -55,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = t('sign_up', 'Sign Up');
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container my-5">

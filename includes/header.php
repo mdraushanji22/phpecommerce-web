@@ -24,15 +24,26 @@ $currentLang = getCurrentLang();
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css">
     <script>
-    // Apply saved theme immediately to prevent flash of wrong theme
     (function() {
-        var theme = localStorage.getItem('theme') || 'light';
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
-        if (theme === 'dark') document.body.classList.add('dark-mode');
+        if (theme === 'dark') document.documentElement.classList.add('dark-mode');
     })();
     </script>
+    <style>body:not(.js-ready){transition:none !important}</style>
 </head>
 <body>
+    <script>
+    (function() {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') document.body.classList.add('dark-mode');
+        document.body.classList.add('js-ready');
+    })();
+    </script>
     <!-- Sticky Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" id="mainNavbar">
         <div class="container">

@@ -34,6 +34,12 @@ if (!isUserLoggedIn()) {
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
+if (!is_array($input)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid request data']);
+    exit;
+}
+
 if (!isset($input['amount']) || !is_numeric($input['amount']) || $input['amount'] <= 0) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Invalid amount']);

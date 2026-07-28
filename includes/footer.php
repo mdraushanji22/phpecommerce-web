@@ -60,7 +60,6 @@
         var icon = document.getElementById('themeIcon');
         if (!toggle || !icon) return;
 
-        // Set initial icon
         function updateIcon() {
             var isDark = document.body.classList.contains('dark-mode');
             icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
@@ -68,13 +67,27 @@
         }
         updateIcon();
 
-        toggle.addEventListener('click', function() {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
             var isDark = document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode', isDark);
             var theme = isDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
             updateIcon();
         });
+
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!localStorage.getItem('theme')) {
+                    var theme = e.matches ? 'dark' : 'light';
+                    document.body.classList.toggle('dark-mode', e.matches);
+                    document.documentElement.classList.toggle('dark-mode', e.matches);
+                    document.documentElement.setAttribute('data-theme', theme);
+                    updateIcon();
+                }
+            });
+        }
     })();
 
     // Sticky Header Shadow Effect
@@ -91,7 +104,7 @@
     })();
     </script>
 
-<?php if (!empty($_SESSION['show_location_prompt'])): ?>
+<?php if (! empty($_SESSION['show_location_prompt'])): ?>
 <?php unset($_SESSION['show_location_prompt']); ?>
     <!-- Location Permission Modal -->
     <div class="modal fade" id="locationPermissionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
@@ -178,6 +191,7 @@
     })();
     </script>
 <?php endif; ?>
+
     </body>
 
     </html>

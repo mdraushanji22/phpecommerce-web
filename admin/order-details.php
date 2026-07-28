@@ -44,8 +44,8 @@ $items = $stmt->fetchAll();
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Order Date:</strong> <?php echo date('M d, Y h:i A', strtotime($order['created_at'])); ?></p>
-                            <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['user_name']); ?></p>
-                            <p><strong>Email:</strong> <?php echo htmlspecialchars($order['user_email']); ?></p>
+                            <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['user_name'] ?? 'Deleted User'); ?></p>
+                            <p><strong>Email:</strong> <?php echo htmlspecialchars($order['user_email'] ?? 'N/A'); ?></p>
                         </div>
                         <div class="col-md-6">
                             <p><strong>Payment Method:</strong> 
@@ -69,7 +69,7 @@ $items = $stmt->fetchAll();
                             <p><strong>Order Status:</strong> 
                                 <span class="badge bg-<?php
                                     $badges = ['pending' => 'warning', 'processing' => 'info', 'completed' => 'success', 'cancelled' => 'danger'];
-                                    echo $badges[$order['order_status']];
+                                    echo $badges[$order['order_status']] ?? 'secondary';
                                 ?>">
                                     <?php echo ucfirst($order['order_status']); ?>
                                 </span>
@@ -114,13 +114,13 @@ $items = $stmt->fetchAll();
                     <h5>Shipping Address</h5>
                 </div>
                 <div class="card-body">
-                    <p><strong><?php echo htmlspecialchars($order['shipping_name']); ?></strong></p>
-                    <p><?php echo nl2br(htmlspecialchars($order['shipping_address'])); ?></p>
-                    <p><?php echo htmlspecialchars($order['shipping_city']); ?>, <?php echo htmlspecialchars($order['shipping_state']); ?></p>
-                    <p>PIN: <?php echo htmlspecialchars($order['shipping_pincode']); ?></p>
+                    <p><strong><?php echo htmlspecialchars($order['shipping_name'] ?? ''); ?></strong></p>
+                    <p><?php echo nl2br(htmlspecialchars($order['shipping_address'] ?? '')); ?></p>
+                    <p><?php echo htmlspecialchars($order['shipping_city'] ?? ''); ?>, <?php echo htmlspecialchars($order['shipping_state'] ?? ''); ?></p>
+                    <p>PIN: <?php echo htmlspecialchars($order['shipping_pincode'] ?? ''); ?></p>
                     <hr>
-                    <p><i class="bi bi-envelope"></i> <?php echo htmlspecialchars($order['shipping_email']); ?></p>
-                    <p><i class="bi bi-telephone"></i> <?php echo htmlspecialchars($order['shipping_mobile']); ?></p>
+                    <p><i class="bi bi-envelope"></i> <?php echo htmlspecialchars($order['shipping_email'] ?? ''); ?></p>
+                    <p><i class="bi bi-telephone"></i> <?php echo htmlspecialchars($order['shipping_mobile'] ?? ''); ?></p>
                 </div>
             </div>
         </div>

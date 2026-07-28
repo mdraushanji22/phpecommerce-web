@@ -19,4 +19,3 @@ session_destroy();
 // Redirect to admin login
 header('Location: ' . ADMIN_URL . '/login.php');
 exit;
-?>

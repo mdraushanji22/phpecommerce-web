@@ -4,9 +4,6 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireAdminLogin();
 
-$pageTitle = 'Return Details';
-require_once __DIR__ . '/../includes/admin_header.php';
-
 $db = getDB();
 $returnId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -98,6 +95,9 @@ $orderItem = $stmt->fetch();
 $stmt = $db->prepare("SELECT * FROM orders WHERE id = ?");
 $stmt->execute([$return['order_id']]);
 $order = $stmt->fetch();
+
+$pageTitle = 'Return Details';
+require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <div class="container-fluid my-4">

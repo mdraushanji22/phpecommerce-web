@@ -46,7 +46,7 @@ $orders = $stmt->fetchAll();
                     <td><?php echo htmlspecialchars($order['payment_method']); ?></td>
                     <td>
                         <?php
-                        $badgeClass = '';
+                        $badgeClass = 'secondary';
                         switch ($order['order_status']) {
                             case 'pending': $badgeClass = 'warning'; break;
                             case 'processing': $badgeClass = 'info'; break;

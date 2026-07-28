@@ -4,21 +4,18 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireAdminLogin();
 
-$pageTitle = 'Add Product';
-require_once __DIR__ . '/../includes/admin_header.php';
-
 $db = getDB();
 $categories = $db->query("SELECT * FROM categories WHERE status = 'active' ORDER BY name")->fetchAll();
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $categoryId = (int)$_POST['category_id'];
-    $title = sanitize($_POST['title']);
-    $description = sanitize($_POST['description']);
-    $price = (float)$_POST['price'];
-    $stock = (int)$_POST['stock'];
-    $status = sanitize($_POST['status']);
+    $categoryId = (int)($_POST['category_id'] ?? 0);
+    $title = sanitize($_POST['title'] ?? '');
+    $description = sanitize($_POST['description'] ?? '');
+    $price = (float)($_POST['price'] ?? 0);
+    $stock = (int)($_POST['stock'] ?? 0);
+    $status = sanitize($_POST['status'] ?? 'active');
 
     if (empty($title) || $categoryId <= 0 || $price <= 0) {
         $error = 'Please fill all required fields';
@@ -48,6 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'Add Product';
+require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <div class="container-fluid my-4">

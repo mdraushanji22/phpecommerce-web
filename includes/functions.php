@@ -3,7 +3,8 @@ require_once __DIR__ . '/../config/database.php';
 
 // Sanitize input data
 function sanitize($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
+    if ($data === null) return '';
+    return htmlspecialchars(strip_tags(trim((string)$data)));
 }
 
 // Check if user is logged in
@@ -478,15 +479,17 @@ function getAverageRating($productId) {
 // Get reviews for a product
 function getProductReviews($productId, $limit = 50, $offset = 0) {
     $db = getDB();
+    $limit = (int)$limit;
+    $offset = (int)$offset;
     $stmt = $db->prepare("
         SELECT r.*, u.name as user_name 
         FROM reviews r 
         JOIN users u ON r.user_id = u.id 
         WHERE r.product_id = ? AND r.status = 'active' 
         ORDER BY r.created_at DESC 
-        LIMIT ? OFFSET ?
+        LIMIT {$limit} OFFSET {$offset}
     ");
-    $stmt->execute([$productId, $limit, $offset]);
+    $stmt->execute([$productId]);
     return $stmt->fetchAll();
 }
 
@@ -719,11 +722,9 @@ function searchProducts($filters = [], $page = 1, $perPage = 12) {
 
     // Get products
     $offset = ($page - 1) * $perPage;
-    $params[] = $perPage;
-    $params[] = $offset;
 
     $selectCols = "SELECT p.*, COALESCE(rev.avg_rating, 0) as avg_rating, COALESCE(rev.review_count, 0) as review_count, b.name as brand_name, s.name as subcategory_name";
-    $productQuery = "{$selectCols} {$baseQuery} GROUP BY p.id {$having} ORDER BY {$orderBy} LIMIT ? OFFSET ?";
+    $productQuery = "{$selectCols} {$baseQuery} GROUP BY p.id {$having} ORDER BY {$orderBy} LIMIT {$perPage} OFFSET {$offset}";
     $stmt = $db->prepare($productQuery);
     $stmt->execute($params);
     $products = $stmt->fetchAll();

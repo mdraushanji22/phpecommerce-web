@@ -43,8 +43,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Admin Login - <?php echo SITE_NAME; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/admin.css">
+    <script>
+    (function() {
+        var theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') document.documentElement.classList.add('dark-mode');
+    })();
+    </script>
+    <style>
+    html.dark-mode .bg-light { background-color: #1e1e1e !important; }
+    html.dark-mode body { background-color: #121212; color: #e0e0e0; }
+    html.dark-mode .card { background-color: #1e1e1e; border-color: #2d2d2d; color: #e0e0e0; }
+    html.dark-mode .form-control, html.dark-mode .form-select { background-color: #1e1e1e; border-color: #3d3d3d; color: #e0e0e0; }
+    html.dark-mode .form-control:focus, html.dark-mode .form-select:focus { background-color: #252525; border-color: #0d6efd; color: #e0e0e0; box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.35); }
+    html.dark-mode .form-label { color: #ccc; }
+    html.dark-mode .input-group-text { background-color: #2a2a2a; border-color: #3d3d3d; color: #aaa; }
+    html.dark-mode .text-muted { color: #999 !important; }
+    html.dark-mode .alert-info { background-color: #1a2a3a; border-color: #1e4976; color: #8ec5fc; }
+    html.dark-mode a { color: #6ea8fe; }
+    html.dark-mode .theme-toggle { color: #e0e0e0; }
+    html.dark-mode .theme-toggle:hover { background-color: rgba(255,255,255,0.15); }
+    </style>
 </head>
 <body class="bg-light">
+    <div style="position:fixed;top:1rem;right:1rem;z-index:9999;">
+        <button class="btn btn-outline-secondary rounded-circle theme-toggle" id="themeToggle" type="button" title="Toggle Dark Mode" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border-color:#6c757d;">
+            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+        </button>
+    </div>
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-5">
@@ -86,12 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <i class="bi bi-arrow-left"></i> Back to Website
                             </a>
                         </div>
-
-                        <div class="alert alert-info mt-4 small">
-                            <strong>Default Credentials:</strong><br>
-                            Email: admin@ecommerce.com<br>
-                            Password: admin123
-                        </div>
                     </div>
                 </div>
             </div>
@@ -99,5 +120,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    (function() {
+        var toggle = document.getElementById('themeToggle');
+        var icon = document.getElementById('themeIcon');
+        if (!toggle || !icon) return;
+
+        function updateIcon() {
+            var isDark = document.documentElement.classList.contains('dark-mode');
+            icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+            toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        }
+        updateIcon();
+
+        toggle.addEventListener('click', function() {
+            var isDark = document.documentElement.classList.toggle('dark-mode');
+            var theme = isDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon();
+        });
+    })();
+    </script>
 </body>
 </html>

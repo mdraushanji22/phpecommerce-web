@@ -8,8 +8,6 @@ if ($productId <= 0) {
     exit;
 }
 
-require_once __DIR__ . '/includes/header.php';
-
 $db = getDB();
 
 $stmt = $db->prepare("
@@ -27,6 +25,7 @@ if (!$product) {
 }
 
 $pageTitle = $product['title'];
+require_once __DIR__ . '/includes/header.php';
 
 // Get rating info
 $ratingInfo = getAverageRating($productId);

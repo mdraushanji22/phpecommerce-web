@@ -138,7 +138,7 @@ $recentOrders = $stmt->fetchAll();
                                     <td><?php echo formatPrice($order['total_amount']); ?></td>
                                     <td>
                                         <?php
-                                        $badgeClass = '';
+                                        $badgeClass = 'secondary';
                                         switch ($order['order_status']) {
                                             case 'pending': $badgeClass = 'warning'; break;
                                             case 'processing': $badgeClass = 'info'; break;

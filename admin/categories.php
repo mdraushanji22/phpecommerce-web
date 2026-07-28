@@ -4,14 +4,11 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireAdminLogin();
 
-$pageTitle = 'Manage Categories';
-require_once __DIR__ . '/../includes/admin_header.php';
-
 $db = getDB();
 
 // Handle actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ??'';
+    $action = $_POST['action'] ?? '';
     
     if ($action === 'add') {
         $name = sanitize($_POST['name'] ?? '');
@@ -24,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setFlashMessage('success', 'Category added successfully');
         }
     } elseif ($action === 'edit') {
-        $id = (int)$_POST['id'];
+        $id = (int)($_POST['id'] ?? 0);
         $name = sanitize($_POST['name'] ?? '');
         $description = sanitize($_POST['description'] ?? '');
         $status = sanitize($_POST['status'] ?? 'active');
@@ -35,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setFlashMessage('success', 'Category updated successfully');
         }
     } elseif ($action === 'delete') {
-        $id = (int)$_POST['id'];
+        $id = (int)($_POST['id'] ?? 0);
         $stmt = $db->prepare("DELETE FROM categories WHERE id = ?");
         $stmt->execute([$id]);
         setFlashMessage('success', 'Category deleted successfully');
@@ -47,6 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Get all categories
 $categories = $db->query("SELECT * FROM categories ORDER BY name")->fetchAll();
+
+$pageTitle = 'Manage Categories';
+require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <div class="container-fluid my-4">

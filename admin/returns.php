@@ -4,15 +4,12 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireAdminLogin();
 
-$pageTitle = 'Manage Returns';
-require_once __DIR__ . '/../includes/admin_header.php';
-
 $db = getDB();
 
 // Handle status update POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_return'])) {
-    $returnId = (int)$_POST['return_id'];
-    $newStatus = sanitize($_POST['new_status']);
+    $returnId = (int)($_POST['return_id'] ?? 0);
+    $newStatus = sanitize($_POST['new_status'] ?? '');
     $adminRemarks = trim($_POST['admin_remarks'] ?? '');
     $refundAmount = $_POST['refund_amount'] ?? null;
     $pickupDate = $_POST['pickup_date'] ?? null;
@@ -112,6 +109,9 @@ $returns = $stmt->fetchAll();
 
 // Get stats
 $stats = $db->query("SELECT return_status, COUNT(*) as cnt FROM returns GROUP BY return_status")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$pageTitle = 'Manage Returns';
+require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <div class="container-fluid my-4">

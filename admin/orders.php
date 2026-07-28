@@ -4,15 +4,12 @@
 
     requireAdminLogin();
 
-    $pageTitle = 'Manage Orders';
-    require_once __DIR__ . '/../includes/admin_header.php';
-
     $db = getDB();
 
     // Handle status update
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
-    $orderId = (int) $_POST['order_id'];
-    $status  = sanitize($_POST['order_status']);
+    $orderId = (int)($_POST['order_id'] ?? 0);
+    $status  = sanitize($_POST['order_status'] ?? '');
 
     $stmt = $db->prepare("UPDATE orders SET order_status = ? WHERE id = ?");
     $stmt->execute([$status, $orderId]);
@@ -56,6 +53,9 @@
 
     // Status counts for filter cards
     $stats = $db->query("SELECT order_status, COUNT(*) as cnt FROM orders GROUP BY order_status")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+    $pageTitle = 'Manage Orders';
+    require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <div class="container-fluid my-4">
@@ -162,8 +162,8 @@
                         <tr>
                             <td><?php echo htmlspecialchars($order['order_number']); ?></td>
                             <td>
-                                <?php echo htmlspecialchars($order['user_name']); ?><br>
-                                <small class="text-muted"><?php echo htmlspecialchars($order['user_email']); ?></small>
+                                <?php echo htmlspecialchars($order['user_name'] ?? 'Deleted User'); ?><br>
+                                <small class="text-muted"><?php echo htmlspecialchars($order['user_email'] ?? 'N/A'); ?></small>
                             </td>
                             <td><?php echo date('M d, Y', strtotime($order['created_at'])); ?></td>
                             <td><?php echo formatPrice($order['total_amount']); ?></td>

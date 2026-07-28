@@ -20,13 +20,25 @@ $flash = getFlashMessage();
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/admin.css">
     <script>
     (function() {
-        var theme = localStorage.getItem('theme') || 'light';
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
-        if (theme === 'dark') document.body.classList.add('dark-mode');
+        if (theme === 'dark') document.documentElement.classList.add('dark-mode');
     })();
     </script>
+    <style>body:not(.js-ready){transition:none !important}</style>
 </head>
 <body>
+    <script>
+    (function() {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') document.body.classList.add('dark-mode');
+        document.body.classList.add('js-ready');
+    })();
+    </script>
     <!-- Admin Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">

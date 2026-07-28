@@ -35,11 +35,17 @@ if (!isUserLoggedIn()) {
 // Get JSON input from Razorpay checkout
 $input = json_decode(file_get_contents('php://input'), true);
 
+if (!is_array($input)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid request data']);
+    exit;
+}
+
 $razorpayOrderId   = $input['razorpay_order_id']   ?? '';
 $razorpayPaymentId = $input['razorpay_payment_id'] ?? '';
 $razorpaySignature = $input['razorpay_signature']  ?? '';
 $orderNumber       = $input['order_number']         ?? '';
-$shippingData      = $input['shipping']             ?? [];
+$shippingData      = is_array($input['shipping'] ?? null) ? $input['shipping'] : [];
 
 // Validate all required fields
 if (empty($razorpayOrderId) || empty($razorpayPaymentId) || empty($razorpaySignature) || empty($orderNumber)) {
@@ -127,13 +133,13 @@ $shipping = $subtotal > 500 ? 0 : 50;
 $total = $subtotal + $shipping;
 
 // Use shipping data from the request, or get from user profile
-$shippingName    = $shippingData['name']    ?? '';
-$shippingEmail   = $shippingData['email']   ?? '';
-$shippingMobile  = $shippingData['mobile']  ?? '';
-$shippingAddress = $shippingData['address'] ?? '';
-$shippingCity    = $shippingData['city']    ?? '';
-$shippingState   = $shippingData['state']   ?? '';
-$shippingPincode = $shippingData['pincode'] ?? '';
+$shippingName    = sanitize($shippingData['name']    ?? '');
+$shippingEmail   = sanitize($shippingData['email']   ?? '');
+$shippingMobile  = sanitize($shippingData['mobile']  ?? '');
+$shippingAddress = sanitize($shippingData['address'] ?? '');
+$shippingCity    = sanitize($shippingData['city']    ?? '');
+$shippingState   = sanitize($shippingData['state']   ?? '');
+$shippingPincode = sanitize($shippingData['pincode'] ?? '');
 
 // Fallback: get from user if shipping data is missing
 if (empty($shippingName)) {

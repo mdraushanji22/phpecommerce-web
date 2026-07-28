@@ -125,12 +125,12 @@ require_once __DIR__ . '/../includes/admin_header.php';
                         <?php foreach ($recentOrders as $order): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($order['order_number']); ?></td>
-                            <td><?php echo htmlspecialchars($order['user_name']); ?></td>
+                            <td><?php echo htmlspecialchars($order['user_name'] ?? 'Deleted User'); ?></td>
                             <td><?php echo date('M d, Y', strtotime($order['created_at'])); ?></td>
                             <td><?php echo formatPrice($order['total_amount']); ?></td>
                             <td>
                                 <?php
-                                    $badgeClass = '';
+                                    $badgeClass = 'secondary';
                                     switch ($order['order_status']) {
                                         case 'pending':$badgeClass = 'warning';
                                             break;

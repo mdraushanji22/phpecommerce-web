@@ -524,6 +524,10 @@ select {
 }
 
 /* Dark Mode Styles */
+html.dark-mode {
+    background-color: #121212;
+}
+
 body.dark-mode {
     background-color: #121212;
     color: #e0e0e0;

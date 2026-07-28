@@ -1,6 +1,6 @@
 <?php
-$pageTitle = 'Reset Password';
-require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/functions.php';
 
 if (isUserLoggedIn()) {
     header('Location: ' . USER_URL . '/dashboard.php');
@@ -42,6 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+$pageTitle = 'Reset Password';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container my-5">
