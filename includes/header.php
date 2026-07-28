@@ -23,6 +23,14 @@ $currentLang = getCurrentLang();
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css">
+    <script>
+    // Apply saved theme immediately to prevent flash of wrong theme
+    (function() {
+        var theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') document.body.classList.add('dark-mode');
+    })();
+    </script>
 </head>
 <body>
     <!-- Sticky Navbar -->
@@ -111,6 +119,11 @@ $currentLang = getCurrentLang();
                             <li><a class="dropdown-item change-lang <?php echo $currentLang === 'en' ? 'active' : ''; ?>" href="#" data-lang="en">English</a></li>
                             <li><a class="dropdown-item change-lang <?php echo $currentLang === 'hi' ? 'active' : ''; ?>" href="#" data-lang="hi">Hindi</a></li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link theme-toggle" id="themeToggle" type="button" title="Toggle Dark Mode">
+                            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                        </button>
                     </li>
                 </ul>
             </div>

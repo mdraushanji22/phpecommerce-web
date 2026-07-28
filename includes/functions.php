@@ -451,6 +451,18 @@ function verifyCSRFToken() {
 
 // ==================== REVIEW SYSTEM FUNCTIONS ====================
 
+// Update product rating stats (avg_rating + review_count)
+function syncProductRating($productId) {
+    $db = getDB();
+    $stmt = $db->prepare("
+        UPDATE products 
+        SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = ? AND status = 'active'),
+            review_count = (SELECT COUNT(*) FROM reviews WHERE product_id = ? AND status = 'active')
+        WHERE id = ?
+    ");
+    $stmt->execute([$productId, $productId, $productId]);
+}
+
 // Get average rating for a product
 function getAverageRating($productId) {
     $db = getDB();

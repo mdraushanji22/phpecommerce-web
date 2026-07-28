@@ -81,9 +81,7 @@ try {
             $stmt = $db->prepare("INSERT INTO reviews (product_id, user_id, rating, comment, status, created_at) VALUES (?, ?, ?, ?, 'active', NOW())");
             $stmt->execute([$productId, $userId, $rating, $comment]);
 
-            // Update product average rating
-            $stmt = $db->prepare("UPDATE products SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = ? AND status = 'active') WHERE id = ?");
-            $stmt->execute([$productId, $productId]);
+            syncProductRating($productId);
 
             $db->commit();
 
@@ -129,9 +127,7 @@ try {
             $stmt = $db->prepare("UPDATE reviews SET rating = ?, comment = ?, updated_at = NOW() WHERE id = ?");
             $stmt->execute([$rating, $comment, $reviewId]);
 
-            // Update product average rating
-            $stmt = $db->prepare("UPDATE products SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = ? AND status = 'active') WHERE id = ?");
-            $stmt->execute([$review['product_id'], $review['product_id']]);
+            syncProductRating($review['product_id']);
 
             $db->commit();
 
@@ -165,9 +161,7 @@ try {
             $stmt = $db->prepare("DELETE FROM reviews WHERE id = ?");
             $stmt->execute([$reviewId]);
 
-            // Update product average rating
-            $stmt = $db->prepare("UPDATE products SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = ? AND status = 'active') WHERE id = ?");
-            $stmt->execute([$review['product_id'], $review['product_id']]);
+            syncProductRating($review['product_id']);
 
             $db->commit();
 

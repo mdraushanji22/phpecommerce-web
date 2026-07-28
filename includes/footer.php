@@ -54,6 +54,29 @@
         });
     });
 
+    // Theme Toggle (Dark Mode)
+    (function() {
+        var toggle = document.getElementById('themeToggle');
+        var icon = document.getElementById('themeIcon');
+        if (!toggle || !icon) return;
+
+        // Set initial icon
+        function updateIcon() {
+            var isDark = document.body.classList.contains('dark-mode');
+            icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+            toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        }
+        updateIcon();
+
+        toggle.addEventListener('click', function() {
+            var isDark = document.body.classList.toggle('dark-mode');
+            var theme = isDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateIcon();
+        });
+    })();
+
     // Sticky Header Shadow Effect
     (function() {
         var navbar = document.getElementById('mainNavbar');

@@ -18,6 +18,13 @@ $flash = getFlashMessage();
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/admin.css">
+    <script>
+    (function() {
+        var theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') document.body.classList.add('dark-mode');
+    })();
+    </script>
 </head>
 <body>
     <!-- Admin Navbar -->
@@ -59,6 +66,11 @@ $flash = getFlashMessage();
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link theme-toggle" id="themeToggle" type="button" title="Toggle Dark Mode">
+                            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                        </button>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo SITE_URL; ?>/" target="_blank"><i class="bi bi-globe"></i> View Site</a>
                     </li>
