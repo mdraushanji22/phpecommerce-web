@@ -1,21 +1,21 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../includes/functions.php';
+    require_once __DIR__ . '/../config/config.php';
+    require_once __DIR__ . '/../includes/functions.php';
 
-requireAdminLogin();
+    requireAdminLogin();
 
-$db = getDB();
-$categories = $db->query("SELECT * FROM categories WHERE status = 'active' ORDER BY name")->fetchAll();
+    $db         = getDB();
+    $categories = $db->query("SELECT * FROM categories WHERE status = 'active' ORDER BY name")->fetchAll();
 
-$error = '';
+    $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $categoryId = (int)($_POST['category_id'] ?? 0);
-    $title = sanitize($_POST['title'] ?? '');
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $categoryId  = (int) ($_POST['category_id'] ?? 0);
+    $title       = sanitize($_POST['title'] ?? '');
     $description = sanitize($_POST['description'] ?? '');
-    $price = (float)($_POST['price'] ?? 0);
-    $stock = (int)($_POST['stock'] ?? 0);
-    $status = sanitize($_POST['status'] ?? 'active');
+    $price       = (float) ($_POST['price'] ?? 0);
+    $stock       = (int) ($_POST['stock'] ?? 0);
+    $status      = sanitize($_POST['status'] ?? 'active');
 
     if (empty($title) || $categoryId <= 0 || $price <= 0) {
         $error = 'Please fill all required fields';
@@ -44,14 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     }
-}
+    }
 
-$pageTitle = 'Add Product';
-require_once __DIR__ . '/../includes/admin_header.php';
+    $pageTitle = 'Add Product';
+    require_once __DIR__ . '/../includes/admin_header.php';
 ?>
 
 <div class="container-fluid my-4">
-    <h2 class="mb-4">Add New Product</h2>
+    <h2 class="mb-4 text-white">Add New Product</h2>
 
     <?php if ($error): ?>
     <div class="alert alert-danger"><?php echo $error; ?></div>

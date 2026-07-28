@@ -4,6 +4,25 @@ require_once __DIR__ . '/includes/header.php';
 
 $db = getDB();
 
+// Category icon mapping
+function getCategoryIcon($name) {
+    $lower = strtolower($name);
+    if (strpos($lower, 'book') !== false) return 'bi-book-fill';
+    if (strpos($lower, 'electron') !== false) return 'bi-laptop-fill';
+    if (strpos($lower, 'fashion') !== false || strpos($lower, 'cloth') !== false || strpos($lower, 'wear') !== false) return 'bi-bag-fill';
+    if (strpos($lower, 'home') !== false || strpos($lower, 'kitchen') !== false) return 'bi-house-fill';
+    if (strpos($lower, 'software') !== false || strpos($lower, 'digital') !== false) return 'bi-window-stack';
+    if (strpos($lower, 'sport') !== false || strpos($lower, 'game') !== false) return 'bi-trophy-fill';
+    if (strpos($lower, 'beauty') !== false || strpos($lower, 'health') !== false) return 'bi-heart-fill';
+    if (strpos($lower, 'toy') !== false) return 'bi-puzzle-fill';
+    if (strpos($lower, 'food') !== false || strpos($lower, 'grocery') !== false) return 'bi-cup-hot-fill';
+    if (strpos($lower, 'mobile') !== false || strpos($lower, 'phone') !== false) return 'bi-phone-fill';
+    if (strpos($lower, 'car') !== false || strpos($lower, 'auto') !== false) return 'bi-car-front-fill';
+    if (strpos($lower, 'jewel') !== false) return 'bi-gem';
+    if (strpos($lower, 'pet') !== false || strpos($lower, 'animal') !== false) return 'bi-balloon-fill';
+    return 'bi-tag-fill';
+}
+
 // Get featured products
 $stmt = $db->prepare("
     SELECT * FROM products 
@@ -87,7 +106,7 @@ $categories = $stmt->fetchAll();
             <a href="<?php echo SITE_URL; ?>/products.php?category=<?php echo $category['id']; ?>" class="text-decoration-none">
                 <div class="card category-card text-center h-100">
                     <div class="card-body">
-                        <i class="bi bi-tag-fill text-primary fs-1"></i>
+                        <i class="bi <?php echo getCategoryIcon($category['name']); ?> text-primary fs-1"></i>
                         <h5 class="card-title mt-3"><?php echo htmlspecialchars($category['name']); ?></h5>
                     </div>
                 </div>
