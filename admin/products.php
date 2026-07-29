@@ -4,10 +4,20 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireAdminLogin();
 
+$db = getDB();
+
+// Handle product deletion
+if (isset($_GET['delete'])) {
+    $id = (int)$_GET['delete'];
+    $stmt = $db->prepare("DELETE FROM products WHERE id = ?");
+    $stmt->execute([$id]);
+    setFlashMessage('Product deleted successfully', 'success');
+    header('Location: ' . ADMIN_URL . '/products.php');
+    exit;
+}
+
 $pageTitle = 'Manage Products';
 require_once __DIR__ . '/../includes/admin_header.php';
-
-$db = getDB();
 
 // Get all products
 $products = $db->query("
@@ -62,8 +72,13 @@ $categories = $db->query("SELECT * FROM categories WHERE status = 'active' ORDER
                             </td>
                             <td>
                                 <a href="<?php echo ADMIN_URL; ?>/product-edit.php?id=<?php echo $product['id']; ?>" 
-                                   class="btn btn-sm btn-primary">
+                                   class="btn btn-sm btn-primary" title="Edit">
                                     <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="<?php echo ADMIN_URL; ?>/products.php?delete=<?php echo $product['id']; ?>" 
+                                   class="btn btn-sm btn-danger" title="Delete"
+                                   onclick="return confirm('Are you sure you want to delete this product? This action cannot be undone.')">
+                                    <i class="bi bi-trash"></i>
                                 </a>
                             </td>
                         </tr>

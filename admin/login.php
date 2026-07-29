@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     html.dark-mode body { background-color: #121212; color: #e0e0e0; }
     html.dark-mode .card { background-color: #1e1e1e; border-color: #2d2d2d; color: #e0e0e0; }
     html.dark-mode .form-control, html.dark-mode .form-select { background-color: #1e1e1e; border-color: #3d3d3d; color: #e0e0e0; }
+    html.dark-mode .form-control::placeholder, html.dark-mode .form-select::placeholder { color: #888; opacity: 1; }
     html.dark-mode .form-control:focus, html.dark-mode .form-select:focus { background-color: #252525; border-color: #0d6efd; color: #e0e0e0; box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.35); }
     html.dark-mode .form-label { color: #ccc; }
     html.dark-mode .input-group-text { background-color: #2a2a2a; border-color: #3d3d3d; color: #aaa; }

@@ -12,7 +12,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-top: 56px; /* Offset for sticky header */
+    padding-top: 56px;
 }
 
 /* Hero Slider */
@@ -283,9 +283,16 @@ img {
 
 /* ==================== STICKY HEADER STYLES ==================== */
 
-.sticky-top {
+.fixed-top {
     z-index: 1030;
     transition: box-shadow 0.3s ease;
+}
+
+/* Mini badge for cart/wishlist counts */
+.navbar .badge.rounded-pill {
+    font-size: 0.65rem !important;
+    padding: 0.15em 0.45em !important;
+    min-width: 16px;
 }
 
 /* ==================== ESTIMATED DELIVERY STYLES ==================== */

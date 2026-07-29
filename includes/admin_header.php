@@ -40,7 +40,7 @@ $flash = getFlashMessage();
     })();
     </script>
     <!-- Admin Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="<?php echo ADMIN_URL; ?>/index.php">
                 <i class="bi bi-speedometer2"></i> Admin Panel

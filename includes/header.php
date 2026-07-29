@@ -45,7 +45,7 @@ $currentLang = getCurrentLang();
     })();
     </script>
     <!-- Sticky Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" id="mainNavbar">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand fw-bold" href="<?php echo SITE_URL; ?>/">
                 <i class="bi bi-shop"></i> <?php echo SITE_NAME; ?>
