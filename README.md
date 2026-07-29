@@ -5,6 +5,7 @@ A feature-rich e-commerce platform built with **Core PHP 8**, **MySQL**, and **B
 ## Features
 
 ### Frontend (User Side)
+
 - **Home Page** — Hero slider (3 slides), featured products, category grid with smart category-specific icons
 - **Product Listing** — Search, filter by category/price/rating, sort, pagination (12/page)
 - **Product Details** — Image, description, features, quantity selector, related products, reviews & ratings
@@ -20,6 +21,7 @@ A feature-rich e-commerce platform built with **Core PHP 8**, **MySQL**, and **B
 - **Multilingual** — English + Hindi, language switcher, file-based translations (`lang/`)
 
 ### Admin Panel
+
 - **Dashboard** — Stats cards: products, users, orders, revenue, pending orders; recent 10 orders table
 - **Category Management** — Full CRUD via modal forms, active/inactive toggle
 - **Product Management** — Add/Edit/Delete, image upload, category assignment, status toggle
@@ -31,13 +33,13 @@ A feature-rich e-commerce platform built with **Core PHP 8**, **MySQL**, and **B
 
 ## Technology Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Backend | Core PHP 8 (No Framework) |
-| Database | MySQL / MariaDB with PDO |
+| Layer    | Technology                     |
+| -------- | ------------------------------ |
+| Backend  | Core PHP 8 (No Framework)      |
+| Database | MySQL / MariaDB with PDO       |
 | Frontend | Bootstrap 5.3, Bootstrap Icons |
-| Payments | Razorpay (Test Mode) |
-| Server | Apache via XAMPP |
+| Payments | Razorpay (Test Mode)           |
+| Server   | Apache via XAMPP               |
 
 ## Project Structure
 
@@ -126,6 +128,10 @@ phpecommerce/
 └── razorpay-verify.php    # Verify Razorpay payment
 ```
 
+## Screenshots
+
+![alt text](<Screenshot 2026-07-29 112301.png>)
+
 ## Database Schema (15 tables)
 
 - `users` — Customer accounts
@@ -148,9 +154,11 @@ phpecommerce/
 ## Installation
 
 ### Prerequisites
+
 - XAMPP (Apache, MySQL, PHP 7.4+)
 
 ### Steps
+
 1. Copy `phpecommerce` folder to `C:\xampp\htdocs\`
 2. Start Apache & MySQL via XAMPP Control Panel
 3. Open phpMyAdmin, create database `phpecommerce`, import `sql/phpecommerce.sql`
@@ -159,10 +167,12 @@ phpecommerce/
 6. Admin panel: `http://localhost/phpecommerce/admin/`
 
 ### Default Credentials
+
 - **Admin:** admin@ecommerce.com / admin123
 - **Razorpay Test:** Use 4111 1111 1111 1111 card with any future expiry and any CVV
 
 ## Security
+
 - PDO prepared statements (SQL injection prevention)
 - bcrypt password hashing
 - Session-based auth (user + admin separate)
@@ -171,11 +181,14 @@ phpecommerce/
 - Input sanitization
 
 ## Configuration
+
 Edit `config/config.php`:
+
 - Database credentials
 - Site URL (`SITE_URL`)
 - Razorpay test/live keys (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`)
 - Timezone
 
 ## Version
+
 **1.0.0** — Last Updated: July 2026
