@@ -1,289 +1,181 @@
 # PHP E-Commerce Website
 
-A complete, professional, and production-ready E-commerce website built with **Core PHP**, **MySQL**, and **Bootstrap 5**.
+A feature-rich e-commerce platform built with **Core PHP 8**, **MySQL**, and **Bootstrap 5**.
 
-## ✨ Features
+## Features
 
 ### Frontend (User Side)
-- 🏠 **Home Page** with banner slider, featured products, and categories
-- 📦 **Product Listing** with search, filter by category, and pagination
-- 🔍 **Product Details** with image gallery and add to cart
-- 🛒 **Shopping Cart** with update quantity and remove items
-- 💳 **Checkout** with delivery information form and COD payment
-- 👤 **User Authentication** (Login/Signup with password hashing)
-- 📊 **User Dashboard** with order history and profile management
-- 📱 **Fully Responsive** - Mobile, Tablet, and Desktop optimized
+- **Home Page** — Hero slider (3 slides), featured products, category grid with smart category-specific icons
+- **Product Listing** — Search, filter by category/price/rating, sort, pagination (12/page)
+- **Product Details** — Image, description, features, quantity selector, related products, reviews & ratings
+- **Shopping Cart** — AJAX add/update/remove/clear, stock validation, CSRF-protected
+- **Checkout** — Address form (prefilled), COD & Razorpay online payment, flat ₹50 shipping (free over ₹500)
+- **User Auth** — Login/Signup with bcrypt hashing, forgot/reset password via 6-digit email code (10 min expiry)
+- **User Dashboard** — Order stats, recent orders, profile management, wishlist, returns
+- **Wishlist** — AJAX toggle, dedicated wishlist page with add-to-cart
+- **Order Tracking** — Visual timeline (Pending → Processing → Shipped → Delivered → Completed)
+- **Product Reviews** — Star rating (1-5), per-purchase validation, one review per product
+- **Return Management** — 7-day return window, reason selection, drag-drop image upload, status tracking
+- **Dark Mode** — Full theme toggle (frontend + admin), persists via localStorage with `prefers-color-scheme` fallback
+- **Multilingual** — English + Hindi, language switcher, file-based translations (`lang/`)
 
 ### Admin Panel
-- 📈 **Dashboard** with statistics (products, users, orders, revenue)
-- 📂 **Category Management** (Add, Edit, Delete)
-- 📦 **Product Management** (Add, Edit, Delete with multiple images)
-- 📋 **Order Management** (View, Update Status: Pending → Processing → Completed)
-- 👥 **User Management** (View all users with order statistics)
-- 🔐 **Secure Admin Authentication**
+- **Dashboard** — Stats cards: products, users, orders, revenue, pending orders; recent 10 orders table
+- **Category Management** — Full CRUD via modal forms, active/inactive toggle
+- **Product Management** — Add/Edit/Delete, image upload, category assignment, status toggle
+- **Order Management** — List with status filters, search by order/customer/email/ID, inline status update
+- **Order Details** — Shipping address, payment info (Razorpay transaction ID), items table, status update
+- **Return Management** — Filter by status, search, approve/reject, schedule pickup, process refund
+- **User Management** — User list with total orders & total spent
+- **Dark Mode** — Toggle synced with user preference
 
-## 🛠 Technology Stack
+## Technology Stack
 
-- **Backend:** Core PHP (No Framework)
-- **Database:** MySQL with PDO
-- **Frontend:** Bootstrap 5
-- **Icons:** Bootstrap Icons
-- **Security:** PDO Prepared Statements, Password Hashing, Session products
-## 📁 Project Structure
+| Layer | Technology |
+|-------|-----------|
+| Backend | Core PHP 8 (No Framework) |
+| Database | MySQL / MariaDB with PDO |
+| Frontend | Bootstrap 5.3, Bootstrap Icons |
+| Payments | Razorpay (Test Mode) |
+| Server | Apache via XAMPP |
+
+## Project Structure
 
 ```
 phpecommerce/
-├── admin/                  # Admin panel files
-│   ├── index.php          # Admin dashboard
+├── admin/                  # Admin panel (11 files)
+│   ├── index.php          # Dashboard
 │   ├── login.php          # Admin login
-│   ├── categories.php     # Category management
-│   ├── products.php       # Product listing
+│   ├── logout.php         # Admin logout
+│   ├── products.php       # Product listing + delete
 │   ├── product-add.php    # Add product
 │   ├── product-edit.php   # Edit product
+│   ├── categories.php     # Category CRUD
 │   ├── orders.php         # Order management
 │   ├── order-details.php  # Order details
-│   ├── users.php          # User management
-│   └── logout.php         # Admin logout
+│   ├── returns.php        # Returns management
+│   ├── return-details.php # Return details
+│   └── users.php          # User overview
 │
-├── assets/                # Static assets
+├── api/                    # API endpoints (4 files)
+│   ├── reviews.php        # Submit/get reviews
+│   ├── wishlist.php       # Toggle/get wishlist
+│   ├── search.php         # Product search/filter
+│   └── language.php       # Language switcher
+│
+├── assets/                 # Static assets
 │   ├── css/
-│   │   ├── style.css      # Main stylesheet
-│   │   └── admin.css      # Admin panel stylesheet
-│   ├── js/
-│   │   ├── main.js        # Main JavaScript
-│   │   └── admin.js       # Admin JavaScript
-│   └── images/            # Static images
+│   │   ├── style.css      # Frontend styles + dark mode
+│   │   └── admin.css      # Admin styles + dark mode
+│   └── js/
+│       ├── main.js        # Frontend JavaScript
+│       └── admin.js       # Admin JavaScript
 │
-├── config/                # Configuration files
-│   ├── config.php         # Site configuration
-│   └── database.php       # Database connection
+├── config/                 # Configuration
+│   ├── config.php         # Site config, DB constants, Razorpay keys
+│   └── database.php       # PDO singleton
 │
-├── includes/              # Reusable components
-│   ├── header.php         # User header
-│   ├── footer.php         # User footer
-│   ├── admin_header.php   # Admin header
+├── includes/               # Shared components
+│   ├── header.php         # Frontend header + navbar
+│   ├── footer.php         # Frontend footer
+│   ├── admin_header.php   # Admin header + navbar
 │   ├── admin_footer.php   # Admin footer
-│   └── functions.php      # Helper functions
+│   └── functions.php      # Helper functions (~4000 lines)
 │
-├── user/                  # User dashboard files
+├── lang/                   # Language files
+│   ├── en.php             # English translations
+│   └── hi.php             # Hindi translations
+│
+├── user/                   # User dashboard (8 files)
 │   ├── dashboard.php      # User dashboard
 │   ├── orders.php         # User orders
-│   ├── order-details.php  # Order details
-│   └── profile.php        # User profile
+│   ├── order-details.php  # Order details + timeline
+│   ├── profile.php        # Edit profile
+│   ├── wishlist.php       # Wishlist page
+│   ├── returns.php        # My returns
+│   ├── return-request.php # Return request form
+│   └── return-details.php # Return status + images
 │
-├── uploads/               # Uploaded files
+├── sql/                    # Database schemas
+│   ├── phpecommerce.sql   # Core schema + sample data
+│   ├── advanced_features.sql # Brands, subcategories, reviews, wishlist
+│   ├── return_tables.sql  # Returns, return_images, status_history
+│   ├── migrate_razorpay.sql # Razorpay columns
+│   └── insert_translations.php # Import translations to DB
+│
+├── uploads/                # Uploaded files
 │   ├── products/          # Product images
-│   └── categories/        # Category images
+│   ├── categories/        # Category images
+│   └── returns/           # Return request images
 │
 ├── index.php              # Home page
 ├── products.php           # Product listing
 ├── product-details.php    # Product details
 ├── cart.php               # Shopping cart
-├── cart-action.php        # Cart actions (add/update/delete)
+├── cart-action.php        # Cart AJAX actions
 ├── checkout.php           # Checkout page
 ├── login.php              # User login
 ├── signup.php             # User registration
 ├── logout.php             # User logout
-├── database.sql           # Database schema
-└── README.md              # This file
+├── forgot-password.php    # Forgot password
+├── verify-code.php        # Verify reset code
+├── reset-password.php     # Reset password
+├── payment-success.php    # Payment success page
+├── payment-failure.php    # Payment failure page
+├── razorpay-create-order.php # Create Razorpay order
+└── razorpay-verify.php    # Verify Razorpay payment
 ```
 
-## 🚀 Installation Guide
+## Database Schema (15 tables)
+
+- `users` — Customer accounts
+- `admins` — Admin accounts
+- `categories` — Product categories
+- `products` — Product information (FK to categories, brands, subcategories)
+- `brands` — Product brands
+- `subcategories` — Product subcategories
+- `cart` — Shopping cart items
+- `orders` — Customer orders (COD + Razorpay)
+- `order_items` — Order line items
+- `password_resets` — Password reset codes (10 min TTL)
+- `wishlist` — User wishlist items
+- `reviews` — Product reviews & ratings (1-5 stars)
+- `returns` — Return requests with status workflow
+- `return_images` — Return request images
+- `return_status_history` — Return status audit log
+- `site_translations` — DB-backed translations (alternative to file-based)
+
+## Installation
 
 ### Prerequisites
-- **XAMPP** (Apache, MySQL, PHP 7.4+) or similar stack
-- Web browser
+- XAMPP (Apache, MySQL, PHP 7.4+)
 
-### Step-by-Step Installation
+### Steps
+1. Copy `phpecommerce` folder to `C:\xampp\htdocs\`
+2. Start Apache & MySQL via XAMPP Control Panel
+3. Open phpMyAdmin, create database `phpecommerce`, import `sql/phpecommerce.sql`
+4. (Optional) Import `sql/advanced_features.sql` and `sql/return_tables.sql` for full feature set
+5. Access at `http://localhost/phpecommerce/`
+6. Admin panel: `http://localhost/phpecommerce/admin/`
 
-1. **Download and Install XAMPP**
-   - Download from: https://www.apachefriends.org/
-   - Install and start Apache and MySQL services
+### Default Credentials
+- **Admin:** admin@ecommerce.com / admin123
+- **Razorpay Test:** Use 4111 1111 1111 1111 card with any future expiry and any CVV
 
-2. **Place Project Files**
-   ```
-   Copy the 'phpecommerce' folder to:
-   C:\xampp\htdocs\phpecommerce
-   ```
+## Security
+- PDO prepared statements (SQL injection prevention)
+- bcrypt password hashing
+- Session-based auth (user + admin separate)
+- CSRF tokens on all AJAX mutations
+- File upload validation (type, size, dimension)
+- Input sanitization
 
-3. **Create Database**
-   - Open phpMyAdmin: http://localhost/phpmyadmin
-   - Click "New" to create a database
-   - Name it: `phpecommerce`
-   - Go to "Import" tab
-   - Choose file: `C:\xampp\htdocs\phpecommerce\database.sql`
-   - Click "Go" to import
+## Configuration
+Edit `config/config.php`:
+- Database credentials
+- Site URL (`SITE_URL`)
+- Razorpay test/live keys (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`)
+- Timezone
 
-4. **Configure Database Connection**
-   - Open: `config/config.php`
-   - Update database credentials if needed:
-   ```php
-   define('DB_HOST', 'localhost');
-   define('DB_USER', 'root');
-   define('DB_PASS', '');
-   define('DB_NAME', 'phpecommerce');
-   ```
-
-5. **Set Folder Permissions**
-   - Ensure the `uploads/` folder has write permissions
-
-6. **Access the Website**
-   - **Frontend:** http://localhost/phpecommerce/
-   - **Admin Panel:** http://localhost/phpecommerce/admin/
-
-## 🔐 Default Credentials
-
-### Admin Login
-- **URL:** http://localhost/phpecommerce/admin/login.php
-- **Email:** admin@ecommerce.com
-- **Password:** admin123
-
-### Test User (You can create new users via signup)
-- Create your own account through the signup page
-
-## 📋 Database Schema
-
-The system includes 8 main tables:
-
-1. **users** - Customer accounts
-2. **admins** - Admin accounts
-3. **categories** - Product categories
-4. **products** - Product information
-5. **product_images** - Product image gallery
-6. **cart** - Shopping cart items
-7. **orders** - Customer orders
-8. **order_items** - Order line items
-
-## 🎯 Key Features Explained
-
-### Security Features
-- ✅ PDO Prepared Statements (SQL Injection Prevention)
-- ✅ Password Hashing (bcrypt)
-- ✅ Session Management
-- ✅ Input Sanitization
-- ✅ CSRF Protection Ready
-
-### User Features
-- ✅ User Registration & Login
-- ✅ Profile Management
-- ✅ Shopping Cart with Quantity Update
-- ✅ Order Placement with COD
-- ✅ Order History & Tracking
-- ✅ Product Search & Filter
-
-### Admin Features
-- ✅ Complete Dashboard with Statistics
-- ✅ Category CRUD Operations
-- ✅ Product CRUD with Multiple Image Upload
-- ✅ Order Status Management
-- ✅ User Overview
-
-### UI/UX Features
-- ✅ Bootstrap 5 Responsive Design
-- ✅ Mobile-First Approach
-- ✅ Smooth Animations
-- ✅ Flash Messages
-- ✅ Form Validation
-- ✅ Product Image Gallery
-
-## 🌐 Sample Data
-
-The database.sql file includes:
-- 1 Admin account
-- 5 Sample categories
-- 9 Sample pproduct
-- 10 Return functionality add
-- # 📱 Responsive Design
-
-The website is fully responsive and tested on:
-- 📱 Mobile devices (320px and up)
-- 📱 Tablets (768px and up)
-- 💻 Desktops (1024px and up)
-- 🖥️ Large screens (1200px and up)
-
-## 🔧 Configuration
-
-### Site URL Configuration
-Edit `config/config.php` to change the site URL:
-```php
-define('SITE_URL', 'http://localhost/phpecommerce');
-```
-
-### Upload Limits
-To increase file upload size, edit `php.ini`:
-```ini
-upload_max_filesize = 10M
-post_max_size = 10M
-```
-
-## 📝 Usage Guide
-
-### For Customers:
-1. Browse products on home page
-2. Click on products to view details
-3. Add products to cart
-4. Update quantities or remove items in cart
-5. Proceed to checkout
-6. Enter shipping information
-7. Place order (COD)
-8. Track orders in user dashboard
-
-### For Administrators:
-1. Login to admin panel
-2. View dashboard statistics
-3. Manage categories, products, orders, and users
-4. Update order status
-5. Add/Edit/Delete products with images
-6. Monitor user activities
-
-## 🛡️ Security Best Practices
-
-- Change default admin password immediately
-- Use HTTPS in production
-- Enable CSRF tokens for forms
-- Regular database backups
-- Keep PHP and MySQL updated
-- Use strong passwords
-
-## 🐛 Troubleshooting
-
-### Common Issues:
-
-**Issue:** Cannot connect to database
-- **Solution:** Check database credentials in `config/config.php`
-
-**Issue:** Images not displaying
-- **Solution:** Check folder permissions for `uploads/` directory
-
-**Issue:** Session errors
-- **Solution:** Ensure `session_start()` is not called multiple times
-
-**Issue:** File upload fails
-- **Solution:** Check PHP upload limits in `php.ini`
-
-## 📧 Support
-
-For issues or questions:
-- Check the troubleshooting section
-- Review the code comments
-- Verify database schema is properly imported
-
-## 📄 License
-
-This project is created for educational purposes. Feel free to use and modify.
-
-## 🎉 Features Coming Soon
-
-- Email notifications
-- Payment gateway integration
-- Product reviews and ratings
-- Wishlist functionality
-- Advanced search filters
-- Multi-language support
-
----
-
-**Built with ❤️ using Core PHP, MySQL, and Bootstrap 5**
-
-**Version:** 1.0.0  
-**Last Updated:** February 9, 2026
+## Version
+**1.0.0** — Last Updated: July 2026
