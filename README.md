@@ -132,6 +132,8 @@ phpecommerce/
 
 ![alt text](<Screenshot 2026-07-29 112301.png>)
 
+![alt text](<Screenshot 2026-07-29 112900.png>)
+
 ## Database Schema (15 tables)
 
 - `users` — Customer accounts
