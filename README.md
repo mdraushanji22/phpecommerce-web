@@ -128,11 +128,17 @@ phpecommerce/
 └── razorpay-verify.php    # Verify Razorpay payment
 ```
 
-## Screenshots
+## Screenshots - PHP-Ecommerce Website
 
 ![alt text](<Screenshot 2026-07-29 112301.png>)
 
 ![alt text](<Screenshot 2026-07-29 112900.png>)
+
+## Screenshots - Admin Panel
+
+![alt text](<Screenshot 2026-07-29 113414.png>)
+
+![alt text](<Screenshot 2026-07-29 113710.png>)
 
 ## Database Schema (15 tables)
 
