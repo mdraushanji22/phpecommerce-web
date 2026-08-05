@@ -200,3 +200,4 @@ Edit `config/config.php`:
 ## Version
 
 **1.0.0** — Last Updated: July 2026
+Name: Md Raushan Jilani 
