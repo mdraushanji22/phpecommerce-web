@@ -201,3 +201,4 @@ Edit `config/config.php`:
 
 **1.0.0** — Last Updated: July 2026
 Name: Md Raushan Jilani 
+Email: mdraushanji22@gmail.com
